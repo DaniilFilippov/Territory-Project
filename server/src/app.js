@@ -36,7 +36,7 @@ app.get('/home', (req, res) => {
     });
 });
 
-app.get('/register', (req, res) => {
+app.post('/register', (req, res) => {
     res.send({
         message: 'User was registered'
     });
