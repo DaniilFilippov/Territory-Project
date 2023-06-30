@@ -3,13 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import components from './components';
 
-Vue.config.productionTip = false
+
 
 /* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+const app = createApp(App);
+// Регистрация всех компонентов глобально
+components.forEach(component => {
+    app.component(component.name, component);
 })
+
+app.mount('#app')
