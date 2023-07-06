@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import GlobalMap from '../views/GlobalMap.vue'
-
+import MyRegister from '@/components/MyRegister'
+import MyLands from '@/components/MyLands'
 const routes = [
   {
     path: '/',
@@ -21,6 +22,16 @@ const routes = [
     name: 'globalmap',
     component: GlobalMap
   },
+  {
+    path: '/register',
+    name: 'MyRegister',
+    component: MyRegister
+  }, 
+  {
+    path: '/lands',
+    name: 'MyLands',
+    component: MyLands
+  }
 ]
 
 const router = createRouter({

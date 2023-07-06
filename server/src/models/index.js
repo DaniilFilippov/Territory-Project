@@ -8,7 +8,7 @@ const db = {}
 
 const squalize = new Sequelize({
     dialect: 'oracle',
-    username: 'parus',
+    username: 'parus', 
     password: 'parus',
     dialectOptions: {
         connectString: '(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = db2.miit.ru)(PORT = 1521))) (CONNECT_DATA = (SERVICE_NAME = cmptest.miit.ru)))'

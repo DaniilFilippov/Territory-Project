@@ -4,7 +4,9 @@ export default {
   register (credentials) {
     return Api().post('register', credentials)
   },
-  lands (credentials) {
-    return Api().post('lands', credentials)
+  lands (params) {
+    return Api().post('territories', {
+      params: params
+    })
   }
 }

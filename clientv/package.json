@@ -9,6 +9,7 @@
     "start": "npm run serve"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "material-design-icons-iconfont": "^6.7.0",
     "vue": "^3.2.13",
