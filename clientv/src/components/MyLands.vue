@@ -4,20 +4,21 @@
     <input v-model="name" type="name" name="name" placeholder="name"/>
     <br>
     <br>
-    <button @click="mounted">Показать земельные участки</button>
+    
+    <button @click="mounted()">Показать земельные участки</button>
     <br>
     <div v-for="terr in info" :key ="terr.rn">
         <ul>
           <li>Идентификатор: {{terr.ID}} </li>
           <li>Наименование: {{terr.NAME}} </li>
-          <li>Примечание:  {{terr.NOTE}} </li>     
+          <li>Примечание:  {{terr.NOTE}} </li>      
         </ul> 
-       <div id="svgMap">
-       
+        {{  strToSvg(terr.SVGMAP)}}
        </div>
-       {{strToSvg(terr.SVGMAP)}}
-    </div>
+       <div id="svgmap">
+        </div>
   </div>
+
 </template>
 
 <script defer >
@@ -31,8 +32,7 @@ export default {
       info: null,
       json: '',
       svg: null,
-      arrTer: null ,
-      parser: new DOMParser()
+      arrTer: null
     }
   },
   methods: {
@@ -47,14 +47,24 @@ export default {
       .post('http://localhost:8081/territories')
       .then(response => (this.info = response.data.lands));
       this.arrTer = JSON.parse(JSON.stringify(this.info));
-      console.log(this.arrTer);
     },
     strToSvg(str) {
-      const parser = new DOMParser();
-      let doc = parser.parseFromString(str,'image/svg+xml');
-      console.log(doc);
-      const elem = document.getElementById("svgMap");
-      elem.style.background = 'red';
+
+      if (str != null)
+      {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(str,'image/svg+xml');
+        console.log(doc.documentElement);
+        try
+        {
+            document.getElementById("svgmap").appendChild(doc.documentElement);
+        }
+        catch(err)
+        {
+          console.log(err);
+        }
+        
+      }
     }
   }
 }

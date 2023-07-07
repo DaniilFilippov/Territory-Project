@@ -23,10 +23,7 @@ async function init() {
         await oracledb.createPool({
             user          : "parus",
             password      : "parus",  
-            connectString : '(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = db2.miit.ru)(PORT = 1521))) (CONNECT_DATA = (SERVICE_NAME = cmptest.miit.ru)))',
-            poolIncrement : 0,
-            poolMax       : 4,
-            poolMin       : 4    
+            connectString : '(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = db2.miit.ru)(PORT = 1521))) (CONNECT_DATA = (SERVICE_NAME = cmptest.miit.ru)))'
         });
 
         app.get('/home', (req, res) => {
@@ -44,10 +41,6 @@ async function init() {
 }
 
 async function handleRequest(request, response) {
-
-    response.writeHead(200, {"Content-Type": "text/html"});
-    response.write("<!DOCTYPE html><html><head><title>My App</title></head><body>");
-
     let connection;
     try {
 
@@ -55,9 +48,10 @@ async function handleRequest(request, response) {
         const result = await connection.execute(`SELECT * FROM fd_t_territory`);
         console.log("Result is:", result.rows);
         
-    } catch (err) {
-        console.log("Error");
-        } finally {
+    } catch (err) 
+    {
+        console.log("Error");  
+    } finally {
         if (connection) {
             try {
                 await connection.close();  // always release the connection back to the pool
@@ -66,16 +60,15 @@ async function handleRequest(request, response) {
             }
         }
     }
-
-    response.write("</body></html>");
-    response.end();
-
 }
 init();
 
 async function getTerritory(request, response) {
+    
+    const pool = oracledb.getPool();
+    const connection = await pool.getConnection();
+    
     try {
-        const connection = await oracledb.getConnection();
         const result = await connection.execute(`SELECT * FROM fd_t_territory`);
     
         response.send({
@@ -85,6 +78,17 @@ async function getTerritory(request, response) {
     catch (err)
     {
         console.log("Error");
+    } 
+    finally 
+    {
+        if (connection) {
+            try {
+                await connection.close();  // always release the connection back to the pool
+                console.error('close');
+            } catch (err) {
+                console.error(err);
+            }
+        }
     }
     
 }

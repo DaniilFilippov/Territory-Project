@@ -55,7 +55,7 @@
   align-items: center
 }
 
-.svgscheme svg {
+svg {
 
   display: flex;
         justify-content: center;
@@ -63,7 +63,7 @@
 }
 
 /*Стили для полигонов SVG*/
-.svgscheme rect, polygon, path, ellipse {
+rect, polygon, path, ellipse {
 	
 	stroke-width: 2;           /*Толщина обводки*/
 	fill: rgba(254,165,0,0.4); /*Цвет заливки #ffdba4*/
@@ -72,7 +72,7 @@
 }
 
 /* Цвета полигонов при наведении мышкой*/
-.svgscheme rect:hover, polygon:hover, #hover, path:hover, ellipse:hover {
+ rect:hover, polygon:hover, #hover, path:hover, ellipse:hover {
 	stroke: rgba(2, 131, 229, 0.294);          /*Цвет обводки #005faa*/
 	stroke-width: 1;                /*Толщина обводки*/	
 	fill: rgb(0,95,170) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
@@ -81,7 +81,7 @@
 
 
 /* Цвета полигонов при наведении мышкой*/
-.svgscheme123 rect:hover, polygon:hover, #hover {
+ rect:hover, polygon:hover, #hover {
 	stroke: rgb(0,95,170);          /*Цвет обводки #005faa*/
 	stroke-width: 5;                /*Толщина обводки*/	
 	fill: rgba(0, 246, 0, 0.4) ;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
