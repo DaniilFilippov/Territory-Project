@@ -1,4 +1,6 @@
 const express = require("express");
+const axios = require("axios");
+const cheerio = require("cheerio");
 const http = require("http");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -16,6 +18,9 @@ app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get('/', function(req, res) {
+    res.json('This is territory cite!');
+})
 
 async function init() {
     try {
@@ -106,3 +111,4 @@ app.post('/territories', (req, res) => {
 
 
 
+ 

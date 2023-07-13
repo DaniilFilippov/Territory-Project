@@ -21,7 +21,8 @@
   
 
 <script>
-   //import AuthenticationService from '@/services/AuthenticationService'
+    import AuthenticationService from '@/services/AuthenticationService'
+    import axios from 'axios'
     export default {
 
         methods: {
@@ -30,7 +31,34 @@
           },
           closeInfoPopup() {
             this.isInfoPopUpVisible = false;
-          }
+          },
+          findLands() {
+          AuthenticationService.lands().then(response => (this.info = response.data.lands)); 
+          this.info = JSON.parse(this.info);
+          console.log(this.info);
+        },
+          mounted() {
+          axios
+            .post('http://localhost:8081/territories')
+            .then(response => (this.info = response.data.lands));
+            this.arrTer = JSON.parse(JSON.stringify(this.info));
+          },
+          strToSvg(str) {
+            if (str != null)
+            {
+              let parser = new DOMParser();
+              let doc = parser.parseFromString(str,'image/svg+xml');
+              console.log(doc.documentElement);
+              try
+              {
+                  document.getElementById("svgmap").appendChild(doc.documentElement);
+              }
+              catch(err)
+              {
+                console.log(err);
+              }
+            }
+        }
         },
         data () {
             return {
@@ -75,7 +103,7 @@ rect, polygon, path, ellipse {
  rect:hover, polygon:hover, #hover, path:hover, ellipse:hover {
 	stroke: rgba(2, 131, 229, 0.294);          /*Цвет обводки #005faa*/
 	stroke-width: 1;                /*Толщина обводки*/	
-	fill: rgb(0,95,170) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
+	fill: rgba(0, 96, 170, 0.29) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
 	/*opacity: 0.5;*/               /*Прозрачность*/
 }
 
