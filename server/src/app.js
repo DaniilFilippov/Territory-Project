@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require("morgan");
 const config = require('./config/config');
+const path = require('path');
 
 const oracledb = require("oracledb");
 oracledb.initOracleClient({libDir: 'C:\\instantclient_19_19'});
@@ -21,6 +22,14 @@ app.use(cors());
 app.get('/', function(req, res) {
     res.json('This is territory cite!');
 })
+
+app.get('/globalmap', (req, res) =>{
+    getTerritory(req, res);
+});
+
+app.get('/home', function(req, res) {
+    res.sendFile(path.join(__dirname,'..','client','index.html'));
+  });
 
 async function init() {
     try {
@@ -76,9 +85,7 @@ async function getTerritory(request, response) {
     try {
         const result = await connection.execute(`SELECT * FROM fd_t_territory`);
     
-        response.send({
-            lands: result.rows
-        });
+        response.json(result.rows);
     }
     catch (err)
     {

@@ -21,6 +21,7 @@
 
        <button  id = "id"> Нажми</button>
        <div id="svgmap">
+        {{  strToSvg(this.info[0].SVGMAP)}}
         </div>
 
 <table id='f2r1' class='table' style='display:none'><caption>лестница</caption><tr><th width='30%'>Характеристика</th><th>Значение</th></tr><tr><td>Название</td><td>лестница</td></tr><tr><td>Высота</td><td>2,33м.</td></tr><tr><td>Площадь</td><td>16,5кв.м.</td></tr><tr><td>Назначение</td><td>нежилая</td></tr><tr><td>Вид</td><td>вспомогательное</td></tr><tr><td>Классификация в  соответствии с отчетностью по ВПО, СПО</td><td>подсобная</td></tr><tr><td>Классификация в соответствии с хозяйственной  деятельностью</td><td>общего использования</td></tr></table>
@@ -101,7 +102,7 @@ export default {
     mounted() {
     axios
       .post('http://localhost:8081/territories')
-      .then(response => (this.info = response.data.lands));
+      .then(response => (this.info = response.data));
       //this.arrTer = JSON.parse(JSON.stringify(this.info));
     },
     strToSvg(str) {
@@ -127,8 +128,7 @@ export default {
     },
     addVon() {     
       console.log("Событие сработало");
-      document.getElementsByTagName('html')[0].setAttribute('xmlns',"http://www.w3.org/1999/xhtml");
-      document.getElementById("r24").setAttribute('v-on:click', 'rc()');
+      document.getElementsByTagName('html')[0].setAttribute('xmlns',"http://www.w3.org/1999/xhtml")
 
     },
   }
