@@ -30,7 +30,12 @@ app.get('/globalmap', (req, res) =>{
 app.get('/home', function(req, res) {
     res.sendFile(path.join(__dirname,'..','client','index.html'));
   });
-
+app.get('/style.css', function(req, res) {
+    res.sendFile(path.join(__dirname,'..','client','style.css'));
+  });
+app.get('/app.js', function(req, res) {
+    res.sendFile(path.join(__dirname,'..','client','app.js'));
+  });
 async function init() {
     try {
 
@@ -84,7 +89,6 @@ async function getTerritory(request, response) {
     
     try {
         const result = await connection.execute(`SELECT * FROM fd_t_territory`);
-    
         response.json(result.rows);
     }
     catch (err)
@@ -105,6 +109,12 @@ async function getTerritory(request, response) {
     
 }
 
+
+app.post('/globalMap', (req, res) => {
+    console.log(req.body);
+})
+
+
 app.post('/register', (req, res) => {
 
     res.send({
@@ -114,6 +124,7 @@ app.post('/register', (req, res) => {
 app.post('/territories', (req, res) => {
     getTerritory(req, res)
 })
+
 
 
 
