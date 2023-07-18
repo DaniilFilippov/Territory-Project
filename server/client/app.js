@@ -21,14 +21,23 @@ for(let i = 0; i < icons.length; i++) {
     icons[i].addEventListener("mouseover", showPopup);
     icons[i].addEventListener("mouseout", hidePopup);
 
+
 }
 
-function showPopup() {
-  console.log(icons);
+function showPopup(evt) {
+  
+  let x = evt.clientX;
+  let y = evt.clientY;
+  console.log(`Координаты мыши: x=${x}, y=${y}`);
   let iconPos = icons[1].getBoundingClientRect();
-  mypopup.style.left = (iconPos.right + 20) + "px";
-  mypopup.style.top = (window.scrollY + iconPos.top - 60) + "px";
+  mypopup.style.left = (x + 20) + "px";
+  mypopup.style.top = (window.scrollY + y - 60) + "px";
   mypopup.style.display = "block";
+}
+
+
+function getCoordiant() {
+
 }
 
 function hidePopup(evt) {
