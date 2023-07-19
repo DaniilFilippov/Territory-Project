@@ -38,14 +38,19 @@
   }
 
   #mypopup {
-    width: 400px;
+    width: auto;
     padding: 20px;
     font-family: Arial, sans-serif;
     font-size: 10pt;
-    background-color: white;
-    border-radius: 6px;
+    background: rgba(232, 232, 232, 0.24);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
     position: absolute;
-    display: none;
+    visibility: hidden;
+    color:aliceblue;
+    font-size:medium;
+    font-weight: 500;
+    box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.517);
   }
   
   #mypopup::before {
@@ -53,7 +58,8 @@
     width: 12px;
     height: 12px;
     transform: rotate(45deg);
-    background-color: white;
+    backdrop-filter: blur(15px);
+    background:rgba(232, 232, 232, 0.24);
     position: absolute;
     left: -6px;
     top: 68px;

@@ -20,28 +20,26 @@ for(let i = 0; i < icons.length; i++) {
 
     icons[i].addEventListener("mouseover", showPopup);
     icons[i].addEventListener("mouseout", hidePopup);
-
-
 }
 
 function showPopup(evt) {
   
-  let x = evt.clientX;
-  let y = evt.clientY;
-  console.log(`Координаты мыши: x=${x}, y=${y}`);
-  let iconPos = icons[1].getBoundingClientRect();
-  mypopup.style.left = (x + 20) + "px";
-  mypopup.style.top = (window.scrollY + y - 60) + "px";
-  mypopup.style.display = "block";
-}
-
-
-function getCoordiant() {
-
+    if (window.getComputedStyle(mypopup, null).getPropertyValue('visibility') == 'hidden')
+    {
+        let x = evt.clientX;
+        let y = evt.clientY;
+        mypopup.style.left = (x + 20) + "px";
+        mypopup.style.top = (window.scrollY + y - 60) + "px";
+        mypopup.style.display = "block";
+        mypopup.style.visibility = 'visible';
+    }
+        
+   
 }
 
 function hidePopup(evt) {
-  mypopup.style.display = "none";
+
+    mypopup.style.visibility = 'hidden';
 }
 
 fetch('http://localhost:8081/globalmap')
@@ -71,6 +69,6 @@ fetch('http://localhost:8081/globalmap')
                     }
                 });
             });
-       
+      
 });
 }
