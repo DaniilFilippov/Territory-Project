@@ -8,12 +8,12 @@ const morgan = require("morgan");
 const config = require('./config/config');
 const path = require('path');
 
-/*
+
 const oracledb = require("oracledb");
 oracledb.initOracleClient({libDir: 'C:\\instantclient_19_19'});
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 oracledb.fetchAsString = [ oracledb.CLOB ];
-*/
+
 const app = express();
 
 app.use(morgan('combined'));
@@ -27,10 +27,26 @@ app.get('/', function(req, res) {
 app.get('/globalmap', (req, res) =>{
     getTerritory(req, res);
 });
-
+//Отправка главной страницы
 app.get('/home', function(req, res) {
     res.sendFile(path.join(__dirname,'..','client','index.html'));
   });
+
+//Список территорий
+app.get('/lands', function(req, res) {
+    res.sendFile(path.join(__dirname,'..','client','lands.html'));
+});
+
+//Список земельных участков
+app.get('/territories', function(req, res) {
+    res.sendFile(path.join(__dirname,'..','client','territories.html'));
+}); 
+
+//Список зданий
+app.get('/buildings', function(req, res) {
+    res.sendFile(path.join(__dirname,'..','client','buildings.html'));
+}); 
+
 app.get('/style.css', function(req, res) {
     res.sendFile(path.join(__dirname,'..','client','style.css'));
   });
@@ -40,8 +56,18 @@ res.sendFile(path.join(__dirname,'..','client','src','BG.jpg'));
 app.get('/app.js', function(req, res) {
     res.sendFile(path.join(__dirname,'..','client','app.js'));
   });
-  app.listen(process.env.PORT || 8081);
-/*
+
+app.get('/iconmenu.png', function(req, res) {
+res.sendFile(path.join(__dirname,'..','client','src','iconmenu.png'));
+});
+app.get('/iconmenuclose.png', function(req, res) {
+res.sendFile(path.join(__dirname,'..','client','src','iconmenuclose.png'));
+});
+app.get('/slider1.jpg', function(req, res) {
+res.sendFile(path.join(__dirname,'..','client','src','slider1.jpg'));
+});
+
+// инициализация БД 
 async function init() {
     try {
 
@@ -87,7 +113,7 @@ async function handleRequest(request, response) {
     }
 }
 init();
-
+//Список всех территорий
 async function getTerritory(request, response) {
     
     const pool = oracledb.getPool();
@@ -111,10 +137,64 @@ async function getTerritory(request, response) {
                 console.error(err);
             }
         }
-    }
-    
+    } 
 }
-*/
+//Список всех земельных участков
+async function getLands(request, response) {
+    
+    const pool = oracledb.getPool();
+    const connection = await pool.getConnection();
+    
+    try {
+        const result = await connection.execute(`SELECT * FROM fd_t_land_plots`);
+        response.json(result.rows);
+    }
+    catch (err)
+    {
+        console.log("Error");
+    } 
+    finally 
+    {
+        if (connection) {
+            try {
+                await connection.close();  // always release the connection back to the pool
+                console.error('close');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    } 
+}
+//Список всех зданий
+async function getBuildings(request, response) {
+    
+    const pool = oracledb.getPool();
+    const connection = await pool.getConnection();
+    
+    try {
+        const result = await connection.execute(`select * from fd_t_bsr_master`);
+        response.json(result.rows);
+    }
+    catch (err)
+    {
+        console.log("Error");
+    } 
+    finally 
+    {
+        if (connection) {
+            try {
+                await connection.close();  // always release the connection back to the pool
+                console.error('close');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    } 
+}
+
+
+
+
 
 app.post('/globalMap', (req, res) => {
     console.log(req.body);
@@ -127,12 +207,12 @@ app.post('/register', (req, res) => {
         message: 'User was registered'
     });
 })
-/*
+
 app.post('/territories', (req, res) => {
     getTerritory(req, res)
 })
 
-*/
+
 
 
 

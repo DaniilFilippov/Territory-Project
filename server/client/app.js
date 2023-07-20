@@ -9,12 +9,9 @@ let tableNames = {
 };
 const terrDisplay = document.querySelector('#globalMap');
 
-
 let icons = document.getElementsByClassName("icon")
 let mypopup = document.getElementById("mypopup");
 let mypopup1 = document.getElementById("mypopup1");
-
-document.body.style.background = 'url(http://localhost:8081/BG.jpg)';
 
 for(let i = 0; i < icons.length; i++) {
 
@@ -42,7 +39,6 @@ function hidePopup(evt) {
 
     mypopup.style.visibility = 'hidden';
 }
-
 
 function showPopup1(evt) {
 
@@ -74,22 +70,22 @@ fetch('http://localhost:8081/globalmap')
         });
 });
 
-    function showInfo() {
-        console.log("Считали нажатие");
-        fetch('http://localhost:8081/globalmap')
-        .then(response => response.json()).then(data => {
-            let table = document.querySelector('#table');
-            const keys = Object.keys(data);
-            keys.forEach(key => {
-                const keys2 = Object.keys(data[key]);
-                keys2.forEach(key2 => {
-                    if(key2 == "ID" || key2 == "NAME" || key2 == "NOTE")
-                    {
-                        console.log(data[key][key2])    
-                        table.insertAdjacentHTML('beforeend', data[key][key2]);
-                    }
-                });
+function showInfo() {
+    console.log("Считали нажатие");
+    fetch('http://localhost:8081/globalmap')
+    .then(response => response.json()).then(data => {
+        let table = document.querySelector('#table');
+        const keys = Object.keys(data);
+        keys.forEach(key => {
+            const keys2 = Object.keys(data[key]);
+            keys2.forEach(key2 => {
+                if(key2 == "ID" || key2 == "NAME" || key2 == "NOTE")
+                {
+                    console.log(data[key][key2])    
+                    table.insertAdjacentHTML('beforeend', data[key][key2]);
+                }
             });
-      
-});
+        });
+    
+    });
 }

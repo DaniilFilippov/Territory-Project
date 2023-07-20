@@ -5,6 +5,9 @@
   font-family: "Arial", sans-serif;
 }
 
+body {
+  background: url(BG.jpg)no-repeat;
+}
 header {
   z-index: 999;
   position: absolute;
@@ -14,13 +17,13 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 200px;
+  padding: 25px 200px;
   transition: 0.5s ease;
 
 }
 
 header .brand {
-  color: #000;
+  color: #000000;
   font-size: 1.5em;
   font-weight: 700;
   text-transform: uppercase;
@@ -28,16 +31,28 @@ header .brand {
 }
 
 header .navigation {
-  position: relative;
+  position: flex;
+}
+
+header .navigation.active {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(1, 1, 1, 0.5);
 }
 
 header .navigation .navigation-item a{
   position: relative;
-  color: #000;
+  color: #000000;
   font-size: 1em;
   font-weight: 500;
   text-decoration: none;
-  margin-left: 30px;
+  margin-left: 10px;
   transition: 0.3s ease;
 }
 
@@ -63,10 +78,21 @@ section {
 .home {
   position: relative;
   width: 100%;
-  min-height: 40vh;
+  min-height: 80vh;
   display: flex;
   justify-content: center;
   flex-direction: column;
+
+}
+
+.home::before {
+  z-index: 777;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 
 }
 
@@ -77,12 +103,62 @@ section {
 }
 
 .home .content h1 {
-  font-size: 4em;
+  font-size: 3em;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 5px;
   line-height: 75px;
   margin-bottom: 40px;
+}
+
+.home .content h1 span {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.home .content p {
+  margin-bottom: 40px;
+}
+
+.home .content a {
+  background: #fff;
+  padding: 15px 35px;
+  color:rgba(0, 0, 0, 0.74);
+  font-size: 1.1em;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 5px;
+  box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.home img {
+  z-index: 000;
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100;
+  object-fit: cover;
+}
+
+
+
+.menu-btn {
+  background: url(iconmenu.png)no-repeat;
+  background-size: 30px;
+  background-position: center;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.menu-btn.active {
+  z-index: 999;
+  background: url(iconmenuclose.png)no-repeat ;
+  background-size: 30px;
+  background-position: center;
+  transition: 0.3s ease;
 }
 
 .container-svg {
