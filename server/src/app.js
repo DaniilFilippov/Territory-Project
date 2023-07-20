@@ -8,11 +8,12 @@ const morgan = require("morgan");
 const config = require('./config/config');
 const path = require('path');
 
+/*
 const oracledb = require("oracledb");
 oracledb.initOracleClient({libDir: 'C:\\instantclient_19_19'});
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 oracledb.fetchAsString = [ oracledb.CLOB ];
-
+*/
 const app = express();
 
 app.use(morgan('combined'));
@@ -33,9 +34,14 @@ app.get('/home', function(req, res) {
 app.get('/style.css', function(req, res) {
     res.sendFile(path.join(__dirname,'..','client','style.css'));
   });
+app.get('/BG.jpg', function(req, res) {
+res.sendFile(path.join(__dirname,'..','client','src','BG.jpg'));
+});
 app.get('/app.js', function(req, res) {
     res.sendFile(path.join(__dirname,'..','client','app.js'));
   });
+  app.listen(process.env.PORT || 8081);
+/*
 async function init() {
     try {
 
@@ -108,7 +114,7 @@ async function getTerritory(request, response) {
     }
     
 }
-
+*/
 
 app.post('/globalMap', (req, res) => {
     console.log(req.body);
@@ -121,11 +127,12 @@ app.post('/register', (req, res) => {
         message: 'User was registered'
     });
 })
+/*
 app.post('/territories', (req, res) => {
     getTerritory(req, res)
 })
 
-
+*/
 
 
 

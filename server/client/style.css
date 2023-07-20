@@ -1,3 +1,90 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing:  border-box;
+  font-family: "Arial", sans-serif;
+}
+
+header {
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 200px;
+  transition: 0.5s ease;
+
+}
+
+header .brand {
+  color: #000;
+  font-size: 1.5em;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+header .navigation {
+  position: relative;
+}
+
+header .navigation .navigation-item a{
+  position: relative;
+  color: #000;
+  font-size: 1em;
+  font-weight: 500;
+  text-decoration: none;
+  margin-left: 30px;
+  transition: 0.3s ease;
+}
+
+header .navigation .navigation-item a:before {
+  content: '';
+  position: absolute;
+  background: #000;
+  width: 0;
+  height: 3px;
+  bottom: 0;
+  left: 0;
+  transition: 0.3s ease;
+}
+
+header .navigation .navigation-item a:hover:before {
+  width: 100%;
+}
+
+section {
+  padding: 100px 200px;
+}
+
+.home {
+  position: relative;
+  width: 100%;
+  min-height: 40vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+}
+
+.home .content {
+  z-index: 888;
+  width: 70%;
+  margin-top: 20px;
+}
+
+.home .content h1 {
+  font-size: 4em;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  line-height: 75px;
+  margin-bottom: 40px;
+}
+
 .container-svg {
     display: flex;
     justify-content: center;
@@ -24,20 +111,20 @@
    rect:hover, polygon:hover, #hover, path:hover, ellipse:hover {
       stroke: rgba(2, 131, 229, 0.294);          /*Цвет обводки #005faa*/
       stroke-width: 1;                /*Толщина обводки*/	
-      fill: rgba(0, 96, 170, 0.29) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
+      fill: rgba(20, 58, 228, 0.74) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
       /*opacity: 0.5;*/               /*Прозрачность*/
   }
   
   
   /* Цвета полигонов при наведении мышкой*/
-   rect:hover, polygon:hover, #hover {
+   rect:hover, polygon:hover, #hover, path:hover {
       stroke: rgb(0,95,170);          /*Цвет обводки #005faa*/
       stroke-width: 5;                /*Толщина обводки*/	
       fill: rgba(0, 246, 0, 0.4) ;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
       /*opacity: 0.5;*/               /*Прозрачность*/
   }
 
-  #mypopup {
+  #mypopup, #mypopup1 {
     width: auto;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -53,7 +140,7 @@
     box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.517);
   }
   
-  #mypopup::before {
+  #mypopup::before, #mypopup1::before {
     content: "";
     width: 12px;
     height: 12px;
@@ -64,3 +151,4 @@
     left: -6px;
     top: 68px;
   }
+
