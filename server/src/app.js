@@ -195,7 +195,6 @@ async function getBuildings(request, response) {
 
 
 
-
 app.post('/globalMap', (req, res) => {
     console.log(req.body);
 })

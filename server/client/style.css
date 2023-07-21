@@ -6,7 +6,7 @@
 }
 
 body {
-  background: url(BG.jpg)no-repeat;
+  background: url(BG.jpg) repeat;
 }
 header {
   z-index: 999;
@@ -200,7 +200,7 @@ section {
       /*opacity: 0.5;*/               /*Прозрачность*/
   }
 
-  #mypopup, #mypopup1 {
+  #mypopup, #mypopup1, #popupOnMap {
     width: auto;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -216,7 +216,7 @@ section {
     box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.517);
   }
   
-  #mypopup::before, #mypopup1::before {
+  #mypopup::before, #mypopup1::before, #popupOnMap::before {
     content: "";
     width: 12px;
     height: 12px;
