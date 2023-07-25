@@ -100,20 +100,14 @@ function hidePopup1(evt) {
     mypopup1.style.visibility = 'hidden';
 }
 
-fetch('http://localhost:8081/globalmap')
-    .then(response => response.json()).then(data => {
-        data.forEach(element => {
-            const SVGMAP = element.SVGMAP;
-            if(SVGMAP != null)
-            {
-                terrDisplay.insertAdjacentHTML('beforeend', SVGMAP);
-            }
-        });
-});
+function showInfo(sender) {
+    console.log(sender.id);
 
-function showInfo() {
-    console.log("Считали нажатие");
-    fetch('http://localhost:8081/globalmap')
+   localStorage.setItem("flag", true);
+   localStorage.setItem("id", sender.id);
+   window.location = "territories";
+
+   /* fetch('http://localhost:8081/globalmap')
     .then(response => response.json()).then(data => {
         let table = document.querySelector('#table');
         const keys = Object.keys(data);
@@ -127,6 +121,15 @@ function showInfo() {
                 }
             });
         });
-    
     });
+    fetch('http://localhost:8081/globalmap')
+    .then(response => response.json()).then(data => {
+        data.forEach(element => {
+            const SVGMAP = element.SVGMAP;
+            if(SVGMAP != null)
+            {
+                terrDisplay.insertAdjacentHTML('beforeend', SVGMAP);
+            }
+    });
+});*/
 }

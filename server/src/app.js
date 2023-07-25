@@ -56,6 +56,9 @@ res.sendFile(path.join(__dirname,'..','client','src','BG.jpg'));
 app.get('/app.js', function(req, res) {
     res.sendFile(path.join(__dirname,'..','client','app.js'));
   });
+app.get('/showTerr.js', function(req, res) {
+    res.sendFile(path.join(__dirname,'..','client','showTerr.js'));
+  });
 
 app.get('/iconmenu.png', function(req, res) {
 res.sendFile(path.join(__dirname,'..','client','src','iconmenu.png'));
@@ -118,9 +121,9 @@ async function getTerritory(request, response) {
     
     const pool = oracledb.getPool();
     const connection = await pool.getConnection();
-    
+    let territoryID = 'МоскваID';
     try {
-        const result = await connection.execute(`SELECT * FROM fd_t_territory`);
+        const result = await connection.execute(`SELECT CODE, NAME, ID, NOTE, SVGMAP  FROM fd_t_territory where ID = '${territoryID}'`);
         response.json(result.rows);
     }
     catch (err)
