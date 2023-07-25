@@ -1,5 +1,6 @@
 let territory = document.getElementsByClassName("terr");
 const terrDisplay = document.querySelector('#terr-content');
+
 window.onload = function(){
     if(localStorage.getItem("flag")){
         document.getElementById("terries-tittle").innerHTML=localStorage.getItem("id");
@@ -20,7 +21,7 @@ window.onload = function(){
                 });
             });
         });
-        
+
         fetch('http://localhost:8081/globalmap')
         .then(response => response.json()).then(data => {
             data.forEach(element => {
