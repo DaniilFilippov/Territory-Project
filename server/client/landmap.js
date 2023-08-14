@@ -27,7 +27,7 @@ fetch('../svgmaps/' + mapId + '.svg')
         // Attach event listeners to svg map elements
         for (let i = 0; i < marks.length; i++) {
             marks[i].addEventListener('mouseover', showPopupOnMap);
-            marks[i].addEventListener('dblclick', showLandMapEvt);
+            marks[i].addEventListener('dblclick', showPopupOnMap);
 }
       })
       .catch(err => {
@@ -42,13 +42,12 @@ fetch('../svgmaps/' + mapId + '.svg')
         console.log(data)
     
         for (let i = 0; i < data.length; i++) {
-            //let link = document.createElement('a');
-            //link.href = `/territories?id=${data[i].ID}`; // Set the href based on the data from the database
-            //link.textContent = `- ${data[i].CODE}`;
-            let text = document.createElement('p');
-            text.textContent = `- ${data[i].CODE}`;
+            let link = document.createElement('a');
+            link.href = `/territories?id=${data[i].ID}`; // Set the href based on the data from the database
+            link.textContent = `- ${data[i].CODE}`;
+    
             let elem = document.createElement('div');
-            elem.appendChild(text);
+            elem.appendChild(link);
             
             // Append element to popupOnMap div before the first child
             popupOnMap.appendChild(elem);
@@ -91,14 +90,13 @@ function showPopupOnMap(evt) {
   function showLandMap(sender) {
   
     console.log("Show " + sender.id);
-
-    window.location.href = `/territories?id=${sender.id}`
+    window.location.href = `/map?id=${sender.id}`
   }
   
   function showLandMapEvt(evt) {
     
     console.log("Show " + evt.target.id);
-    window.location.href = `/territories?id=${evt.target.id}`
+    window.location.href = `/map?id=${evt.target.id}`
   }
 
 
