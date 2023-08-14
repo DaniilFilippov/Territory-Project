@@ -1,111 +1,117 @@
-//const { shutdown } = require("oracledb");
-
-
-let terrTableName = ['Идентификатор', 'Наименование', 'Примечание'];
+let terrTableName = ['Identifier', 'Name', 'Note'];
 let tableNames = {
-    id: 'Идентификатор',
-    name: 'Наименование',
-    note: 'Примечание'
+  id: 'Identifier',
+  name: 'Name',
+  note: 'Note',
 };
 const terrDisplay = document.querySelector('#globalMap');
 
-let icons = document.getElementsByClassName("icon")
-let mypopup = document.getElementById("mypopup");
-let mypopup1 = document.getElementById("mypopup1");
+let popupOnMap = document.querySelector('.popupOnMap');
 
-let popupOnMap = document.getElementById("popupOnMap");
+fetch('../svgmaps/Россия.svg')
+      .then(response => response.text())
+      .then(svgData => {
+        // Append the SVG data to the SVG element
+        const svgContainer = document.getElementById('globalMap');
+        svgContainer.innerHTML = svgData;
+        let icons = document.getElementsByClassName('icon');
+        
+        console.log(icons.length);
+        // Attach event listeners to svg map elements
+        for (let i = 0; i < icons.length; i++) {
+          icons[i].addEventListener('mouseover', showPopupOnMap);
+         // icons[i].addEventListener('click', showPopupOnMap);
+          icons[i].addEventListener('dblclick', showMapEvt);
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching SVG file:', err);
+      });
 
-// Вешаем события на элементы карты svg
-for(let i = 0; i < icons.length; i++) {
+function fetchData() {
+  fetch('/api/territories')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
 
-   //icons[0].addEventListener("mouseover", showPopup);
-   //icons[0].addEventListener("mouseout", hidePopup);
-   //icons[1].addEventListener("mouseover", showPopup1);
-   // icons[1].addEventListener("mouseout", hidePopup1);
+      for (let i = 0; i < data.length; i++) {
+        let link = document.createElement('a');
+        link.href = `/territories?id=${data[i].ID}`; // Set the href based on the data from the database
+        link.textContent = `- ${data[i].NAME}`;
 
-   icons[i].addEventListener("mouseover", showPopupOnMap);
-   icons[i].addEventListener("mouseout", hidePopupOnMap);
-}
-
-//Отображение всплывающего окна
-function showPopupOnMap(evt)
-{
-    let head = document.createElement("h3");
-    head.textContent = this.id;
-    popupOnMap.appendChild(head);
-   
-    for (let i = 0; i < 5; i++) {
         let elem = document.createElement('div');
-        elem.textContent = `Тестовая запись ${i}`
-
-        // добавляем элемент в блок div перед первым узлом
+        elem.appendChild(link);
+        
+        // Append element to popupOnMap div before the first child
         popupOnMap.appendChild(elem);
-    }
-  
-    console.log(this.id);
-    
-    if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility'))
-    {
-        let x = evt.clientX;
-        let y = evt.clientY;
-        popupOnMap.style.left = (x + 20) + "px";
-        popupOnMap.style.top = (window.scrollY + y - 60) + "px";
-        popupOnMap.style.display = "block";
-        popupOnMap.style.visibility = 'visible';
-    }
+      }
+    });
 }
+
+fetchData();
+      
+
+
+// Display popup window
+function showPopupOnMap(evt) {
+  let flag = true;
+  popupOnMap.innerHTML = '';
+  let head = document.createElement('h3');
+  head.textContent = this.id;
+  popupOnMap.id = this.id;
+  popupOnMap.appendChild(head);
+   
+  fetchData();
+ 
+  console.log(this.id);
+
+  // Show popup
+  if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility')) {
+    // Calculate popup position
+    const x = evt.clientX;
+    const y = evt.clientY;
+    popupOnMap.style.visibility = 'visible';
+    popupOnMap.style.left = x + 20 + 'px';
+    popupOnMap.style.top = window.scrollY + y - 60 + 'px';
+  }
+}
+
+document.addEventListener('click', function(event) {
+    // Check if the clicked element is the target element or its descendant
+    if (!event.target.matches('.icon')) {
+      // target element is clicked
+      console.log(123);
+      hidePopupOnMap(event);
+    }
+  });
 
 function hidePopupOnMap(evt) {
-
+  if (!popupOnMap.contains(evt.target)) {
+    // Hide the popup
     popupOnMap.style.visibility = 'hidden';
     popupOnMap.innerHTML = '';
+    console.log('Triggered');
+  }
 }
 
-
-function showPopup(evt) {
-
-    if (window.getComputedStyle(mypopup, null).getPropertyValue('visibility'))
-    {
-        let x = evt.clientX;
-        let y = evt.clientY;
-        mypopup.style.left = (x + 20) + "px";
-        mypopup.style.top = (window.scrollY + y - 60) + "px";
-        mypopup.style.display = "block";
-        mypopup.style.visibility = 'visible';
-    }
-        
+function showMap(sender) {
+  
+  console.log("Show " + sender.id);
+  window.location.href = `/map?id=${sender.id}`
 }
 
-function hidePopup(evt) {
-
-    mypopup.style.visibility = 'hidden';
-}
-
-function showPopup1(evt) {
-
-    if (window.getComputedStyle(mypopup1, null).getPropertyValue('visibility'))
-    {
-        let x = evt.clientX;
-        let y = evt.clientY;
-        mypopup1.style.left = (x + 20) + "px";
-        mypopup1.style.top = (window.scrollY + y - 60) + "px";
-        mypopup1.style.display = "block";
-        mypopup1.style.visibility = 'visible';
-    }
-        
-}
-
-function hidePopup1(evt) {
-
-    mypopup1.style.visibility = 'hidden';
+function showMapEvt(evt) {
+  
+  console.log("Show " + evt.target.id);
+  window.location.href = `/map?id=${evt.target.id}`
 }
 
 function showInfo(sender) {
     console.log(sender.id);
-
-   localStorage.setItem("flag", true);
-   localStorage.setItem("id", sender.id);
-   window.location = "territories";
+   
+   //localStorage.setItem("flag", true);
+   //localStorage.setItem("id", sender.id);
+   //window.location = "territories";
 
    /* fetch('http://localhost:8081/globalmap')
     .then(response => response.json()).then(data => {
