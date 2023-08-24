@@ -15,24 +15,24 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 //Send home page
 app.get('/home', function(req, res) {
-    res.sendFile(path.join(__dirname,'client','index.html'));
+    res.sendFile(path.join(__dirname,'client','pages','index.html'));
 });
 
 //List of territory
 app.get('/territories', function(req, res) {
-    res.sendFile(path.join(__dirname,'client','territories.html'));
+    res.sendFile(path.join(__dirname,'client','pages','territories.html'));
 }); 
 
 //Map by id
 app.get('/map', function(req, res) {
-    res.sendFile(path.join(__dirname,'client','map.html'));
+    res.sendFile(path.join(__dirname,'client','pages','map.html'));
 }); 
 
 //Territory by id
 app.get('/territories/:id', function(req, res) {
     const territoryId = req.params.id;
 
-    res.sendFile(path.join(__dirname,'client','territory.html'));  
+    res.sendFile(path.join(__dirname,'client','pages','territory.html'));  
 }); 
 
 app.use('/api', territoryRoute);
