@@ -1,72 +1,15 @@
 *{
-  margin: 0;
-  padding: 0;
   box-sizing:  border-box;
   font-family: "Arial", sans-serif;
 }
 
+
 body {
-}
-header {
-  z-index: 999;
-  top: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25px 200px;
-  transition: 0.5s ease;
-
-}
-
-header .brand {
-  color: #000000;
-  font-size: 1.5em;
-  font-weight: 700;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-header .navigation {
-  position: flex;
-}
-
-header .navigation.active {
-  position: fixed;
-  width: 100%;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(1, 1, 1, 0.5);
-}
-
-header .navigation .navigation-item a{
-  position: relative;
-  color: #000000;
-  font-size: 1em;
-  font-weight: 500;
-  text-decoration: none;
-  margin-left: 10px;
-  transition: 0.3s ease;
-}
-
-header .navigation .navigation-item a:before {
-  content: '';
-  position: absolute;
-  background: #000;
-  width: 0;
-  height: 3px;
-  bottom: 0;
-  left: 0;
-  transition: 0.3s ease;
-}
-
-header .navigation .navigation-item a:hover:before {
-  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  
+  background-color: #f4f6f6;
 }
 
 section {
@@ -283,3 +226,245 @@ section {
     text-decoration: none;
 
   }
+/*********************************************************HEADER***********************************************************/
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px; /* устанавливаем одинаковые отступы для header и footer */
+  width: 100%;
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+  padding-left: 80px; /* устанавливаем отступ слева для логотипа, такой же как и в футере */
+}
+
+.header-logo {
+  width: 250px;
+  margin-right: 20px;
+}
+
+h1 {
+  color: #ffffff;
+  font-family: 'Arial', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  padding-right: 80px; /* устанавливаем отступ справа для меню навигации, такой же как и в футере слева от последней колонки */
+}
+
+.nav-link {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+}
+
+.nav-link:active {
+  transform: translateY(0);
+}
+
+.nav-link.active {
+  border-bottom: 3px solid #ffffff;
+}
+
+
+/**********************************************************FOOTER************************************************************/
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* изменяем выравнивание элементов на начало контейнера */
+  padding: 30px 80px;
+  width: 100%;
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  color: #ffffff;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+  border-top: 3px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Декоративные элементы: добавляем "лучи" сверху и снизу футера */
+.footer-container::before,
+.footer-container::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 150%;
+  height: 50px;
+  background: linear-gradient(to left, #1e3c72, transparent, #1e3c72); /* градиент для "лучей" */
+  z-index: -1; /* чтобы "лучи" были под содержимым футера */
+}
+
+.footer-container::before {
+  top: -25px; /* "лучи" сверху */
+  transform: rotate(-45deg); /* поворачиваем "лучи" */
+}
+
+.footer-container::after {
+  bottom: -25px; /* "лучи" снизу */
+  transform: rotate(45deg); /* поворачиваем "лучи" */
+}
+.logo-container {
+  flex: 1;
+  padding-left: 80px;
+  text-align: center;
+  padding-top: 0; /* добавляем небольшой верхний отступ, чтобы поднять логотип */
+}
+
+.miit-logo {
+  width: 280px; /* увеличиваем размер логотипа */
+}
+
+.column {
+  flex: 1;
+  padding: 0 20px;
+  text-align: center;
+}
+
+
+.column:last-child {
+  border-right: none; /* убираем линию у последней колонки */
+}
+
+.column:hover {
+  transform: translateY(-5px);
+}
+.contact-info {
+  padding-right: 80px; /* делаем отступ справа таким же, как и у логотипа */
+}
+.miit-info {
+  display: flex;
+  flex: 2;
+  justify-content: space-between;
+}
+.miit-info a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.miit-info a:hover {
+  color: #b5b5b5;
+  transform: scale(1.05);
+}
+
+/****************************************************Адаптивность**********************************************************/
+.menu-toggle {
+  display: none; /* по умолчанию иконка меню скрыта */
+  font-size: 30px; /* увеличиваем размер иконки */
+  color: #ffffff; /* делаем иконку белой */
+  cursor: pointer;
+  margin-left: 20px; /* добавляем отступ слева */
+}
+
+.nav-links {
+  display: none; /* по умолчанию меню скрыто */
+}
+
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .header-container {
+      flex-direction: column;
+      padding: 20px;
+  }
+
+  .logo-title {
+      justify-content: center;
+      width: 100%;
+      text-align: center;
+  }
+
+  .menu-toggle {
+      display: block; /* показываем иконку меню */
+  }
+
+  .nav-links.active {
+      display: flex; /* показываем меню при активации */
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .nav-link {
+      margin: 10px 0;
+  }
+
+  .header-logo {
+      width: 200px;
+  }
+
+  h1 {
+      margin-top: 10px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    padding: 20px; /* уменьшаем отступы */
+}
+
+.miit-logo {
+  margin: 20px 0; /* устанавливаем вертикальные отступы для логотипа */
+}
+
+  .miit-info {
+      flex-direction: column;
+  }
+
+  .column {
+    margin: 10px 0; /* уменьшаем вертикальные отступы для колонок */
+}
+}
+ /* Адаптивность для планшетов и десктопов */
+@media (min-width: 769px) {
+  .nav-links {
+      display: flex; /* показываем меню для планшетов и десктопов */
+  }
+
+  .menu-toggle {
+      display: none; /* скрываем иконку меню для планшетов и десктопов */
+  }
+}
+/* Адаптивность для планшетов */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header-container,
+  .footer-container,
+  .logo-container {
+      padding: 20px 40px; /* уменьшаем отступы */
+  }
+
+  .nav-links,
+  .miit-info {
+      justify-content: space-around; /* равномерное распределение элементов */
+  }
+
+  .header-logo,
+  .miit-logo {
+      width: 220px; /* немного уменьшаем размер логотипа для планшетов */
+  }
+  .column, .miit-logo {
+    margin: 0 10px; /* уменьшаем отступы между колонками и логотипом */
+}
+ 
+
+}

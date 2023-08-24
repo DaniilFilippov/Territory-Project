@@ -9,15 +9,20 @@
 </head>
 <body>
     <header>
-        <a href="#" class="brand">Российский университет транспорта</a>
-
-        <div class="navigation">
-            <div class="navigation-item">
-                <a href="home">Главная</a>
-                <a href="territories">Территории</a>
-                <a href="lands">Земельные участки</a>
-                <a href="buildings">Здания и сооружения</a>
+        <div class="header-container">
+            <div class="logo-title">
+                <a href="../home">
+                    <img src="../src/RUT_rus.svg" alt="Логотип РУТ (МИИТ)" class="header-logo">
+                </a>
+                <h1>Российский университет транспорта</h1>
             </div>
+            <div class="menu-toggle">☰</div> <!-- Иконка меню всегда справа -->
+            <nav class="nav-links">
+                <a href="home" class="nav-link">Главная</a>
+                <a href="territories" class="nav-link">Территории</a>
+                <a href="lands" class="nav-link">Земельные участки</a>
+                <a href="buildings" class="nav-link">Здания и сооружения</a>
+            </nav>
         </div>
     </header>
 
@@ -42,6 +47,25 @@
     <div class="popupOnMap" onclick="showLandMap(this)" >
 
     </div>
+    <footer>
+        <div class="footer-container">
+            <div class="logo-container">
+                <a href="../home">
+                    <img src="../src/RUT_rus.svg" alt="Логотип РУТ (МИИТ)" class="miit-logo">
+                </a>
+            </div>
+            <div class="miit-info">
+                <div class="column">
+                    <p>© 2023 "Российский университет транспорта"</p>
+                </div>
+                <div class="column contact-info">
+                    <p>Адрес: 127994, г. Москва, Образцова ул., 9</p>
+                    <p><a href="tel:+74956811340">Телефон: +7 495 681-13-40</a></p>
+                    <p><a href="mailto:info@rut-miit.ru">Email: info@rut-miit.ru</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script src="territory.js" ></script>
 </body>
 </html>

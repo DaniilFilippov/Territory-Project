@@ -5,37 +5,65 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <title>Поэтажные планы</title>
 </head>
 <body>
     
-    <header>
-        <a href="#" class="brand">Российский университет транспорта</a>
 
-        <div class="navigation">
-            <div class="navigation-item">
-                <a href="home">Главная</a>
-                <a href="territories">Территории</a>
-                <a href="lands">Земельные участки</a>
-                <a href="buildings">Здания и сооружения</a>
+    <header>
+        <div class="header-container">
+            <div class="logo-title">
+                <a href="../home">
+                    <img src="../src/RUT_rus.svg" alt="Логотип РУТ (МИИТ)" class="header-logo">
+                </a>
+                <h1>Российский университет транспорта</h1>
+            </div>
+            <div class="menu-toggle">☰</div> <!-- Иконка меню всегда справа -->
+            <nav class="nav-links">
+                <a href="home" class="nav-link">Главная</a>
+                <a href="territories" class="nav-link">Территории</a>
+                <a href="lands" class="nav-link">Земельные участки</a>
+                <a href="buildings" class="nav-link">Здания и сооружения</a>
+            </nav>
+        </div>
+    </header>
+
+    
+
+    <main>
+        <div id="globalMap">
+        </div>
+        
+        <div class="popupOnMap" onclick="showMap(this)" >
+        </div>
+        
+        <div class="tooltip-block"></div>
+        <div class="terr">
+        </div>
+    </main>
+   
+    <footer>
+        <div class="footer-container">
+            <div class="logo-container">
+                <a href="../home">
+                    <img src="../src/RUT_rus.svg" alt="Логотип РУТ (МИИТ)" class="miit-logo">
+                </a>
+            </div>
+            <div class="miit-info">
+                <div class="column">
+                    <p>© 2023 "Российский университет транспорта"</p>
+                </div>
+                <div class="column contact-info">
+                    <p>Адрес: 127994, г. Москва, Образцова ул., 9</p>
+                    <p><a href="tel:+74956811340">Телефон: +7 495 681-13-40</a></p>
+                    <p><a href="mailto:info@rut-miit.ru">Email: info@rut-miit.ru</a></p>
+                </div>
             </div>
         </div>
-
-    </header>
-  
-    <div id="globalMap">
-        
-        
-    </div>
-    <div class="popupOnMap" onclick="showMap(this)" >
-
-    </div>
-
-
-	<div class="tooltip-block"></div>
-    <div class="terr">
-
-    </div>
-<script src="app.js" ></script>
+    </footer>
+       
+    
+    <script src="app.js" ></script>
 </body>
 </html>

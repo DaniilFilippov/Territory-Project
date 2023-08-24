@@ -99,7 +99,7 @@ function showPopupOnMap(evt) {
     window.location.href = `/map?id=${evt.target.id}`
   }
 
-
+ 
   function hidePopupOnMap(evt) {
     if (!popupOnMap.contains(evt.target)) {
       // Hide the popup
