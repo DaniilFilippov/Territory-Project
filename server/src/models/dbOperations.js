@@ -1,5 +1,5 @@
 const oracledb = require('oracledb');
-const dbConfig = require('./dbconfig'); 
+const dbConfig = require('../config/dbconfig'); 
 oracledb.initOracleClient({libDir: 'C:\\instantclient_19_19'});
 
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;

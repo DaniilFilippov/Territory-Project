@@ -103,13 +103,13 @@ function showPopupOnMap(evt) {
   
     console.log("Show " + sender.id);
 
-    window.location.href = `/territories?id=${sender.id}`
+    window.location.href = `/lands?id=${sender.id}`
   }
   
   function showLandMapEvt(evt) {
     
     console.log("Show " + evt.target.id);
-    window.location.href = `/territories?id=${evt.target.id}`
+    window.location.href = `/lands?id=${evt.target.id}`
   }
 
 

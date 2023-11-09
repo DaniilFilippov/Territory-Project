@@ -1,11 +1,11 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const mapId = urlParams.get('id');
-
-
 let popupOnMap = document.querySelector('.popupOnMap');
 
-document.title = mapId;
+document.title = "Земельный участок: " + territoryId;
+nameTitle.textContent = "Земельный участок - " + territoryId;
+
 
   // Add event listener to adjust SVG map size on browser zoom
   window.addEventListener('resize', function() {

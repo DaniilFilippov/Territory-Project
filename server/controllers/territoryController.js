@@ -1,4 +1,4 @@
-const dbOperations = require('../database/dbOperations');
+const dbOperations = require('../src/models/dbOperations');
 
 //Get all territories
 async function getAllTerritory(req, res) {

@@ -1,4 +1,4 @@
-const dbOperations = require('../database/dbOperations');
+const dbOperations = require('../src/models/dbOperations');
 
 //Get all lands
 async function getAllLands(req, res) {

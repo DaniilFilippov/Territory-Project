@@ -1,4 +1,4 @@
-const dbOperations = require('../database/dbOperations');
+const dbOperations = require('../src/models/dbOperations');
 //Get Building by ID
 async function getBuildingById(req, res) {
     try {

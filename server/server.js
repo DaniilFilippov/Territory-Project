@@ -35,6 +35,21 @@ app.get('/territories/:id', function(req, res) {
     res.sendFile(path.join(__dirname,'client','pages','territory.html'));  
 }); 
 
+
+//lands by id
+app.get('/lands', function(req, res) {
+    const landId = req.params.id;
+
+    res.sendFile(path.join(__dirname,'client','pages','lands.html'));  
+}); 
+
+//Territory by id
+app.get('/lands/:id', function(req, res) {
+    const landId = req.params.id;
+
+    res.sendFile(path.join(__dirname,'client','pages','landmap.html'));  
+}); 
+
 app.use('/api', territoryRoute);
 app.use('/api', landsRoute);
 
