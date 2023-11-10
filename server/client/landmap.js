@@ -1,3 +1,5 @@
+
+
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const landId = urlParams.get('id');
@@ -96,11 +98,3 @@ function showPopupOnMap(evt) {
   }
 
  
-  function hidePopupOnMap(evt) {
-    if (!popupOnMap.contains(evt.target)) {
-      // Hide the popup
-      popupOnMap.style.visibility = 'hidden';
-      popupOnMap.innerHTML = '';
-      console.log('Triggered');
-    }
-  }

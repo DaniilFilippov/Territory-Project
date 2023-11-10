@@ -1,3 +1,5 @@
+
+
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const territoryId = urlParams.get('id');
@@ -7,9 +9,6 @@ let popupOnMap = document.querySelector('.popupOnMap');
 
 document.title = "Территория: " + territoryId;
 nameTitle.textContent = "Территория - " + territoryId;
-
-
-
 
 
 fetch('/api/territories/' + territoryId)
@@ -75,6 +74,7 @@ function showPopupOnMap(evt) {
       popupOnMap.style.top = window.scrollY + y - 60 + 'px';
     }
   }
+
 
   document.addEventListener('click', function(event) {
     // Check if the clicked element is the target element or its descendant
