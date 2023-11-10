@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/lands', landsController.getAllLands);
 
-router.get('/lands/:id/', landsController.getLandById);
+router.get('/lands/:id', landsController.getLandById);
 
 router.get('/territories/lands/:prnID/', landsController.getLandsOfTerritory);
 

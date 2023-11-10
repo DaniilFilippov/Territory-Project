@@ -14,7 +14,7 @@ async function getAllLands(req, res) {
 //Get lands by ID
 async function getLandById(req, res) {
     try {
-        const { id } = req.params.id;
+        const { id } = req.params;
         const result = await dbOperations.executeSQL('SELECT * FROM FD_T_LAND_PLOTS WHERE ID = :id', {id});
         res.status(200).json(result);
       } catch (err) {
@@ -33,6 +33,9 @@ async function getLandsOfTerritory(req, res) {
         res.status(500).json({ error: err.message });
       }
 }
+
+
+
 
 module.exports = {
     getAllLands,

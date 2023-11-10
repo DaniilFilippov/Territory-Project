@@ -8,7 +8,7 @@ const svgMapDisplay = document.querySelector('.svgMap');
 document.title = "Земельный участок: " + landId;
 nameTitle.textContent = "Земельный участок - " + landId;
 
-fetch('/api/territories/lands/' + 'Гимназия')
+fetch('/api/lands/' + landId)
 .then(response => response.json()).then(data => {
     data.forEach(element => {
         const SVGMAP = element.SVGMAP;
