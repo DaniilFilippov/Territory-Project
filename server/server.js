@@ -20,7 +20,7 @@ app.get('/home', function(req, res) {
 
 //List of territory
 app.get('/territories', function(req, res) {
-    res.sendFile(path.join(__dirname,'client','pages','territories.html'));
+    res.sendFile(path.join(__dirname,'client','pages','territory.html'));
 }); 
 
 //Map by id
@@ -40,7 +40,7 @@ app.get('/territories/:id', function(req, res) {
 app.get('/lands', function(req, res) {
     const landId = req.params.id;
 
-    res.sendFile(path.join(__dirname,'client','pages','lands.html'));  
+    res.sendFile(path.join(__dirname,'client','pages','landmap.html'));  
 }); 
 
 //Territory by id

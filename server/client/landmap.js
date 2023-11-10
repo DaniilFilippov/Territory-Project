@@ -1,60 +1,56 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const mapId = urlParams.get('id');
+const landId = urlParams.get('id');
 let popupOnMap = document.querySelector('.popupOnMap');
+const nameTitle = document.querySelector('.nameOfLand');
+const svgMapDisplay = document.querySelector('.svgMap');
 
-document.title = "Земельный участок: " + territoryId;
-nameTitle.textContent = "Земельный участок - " + territoryId;
+document.title = "Земельный участок: " + landId;
+nameTitle.textContent = "Земельный участок - " + landId;
 
-
-  // Add event listener to adjust SVG map size on browser zoom
-  window.addEventListener('resize', function() {
-    var svgMap = document.getElementById('svgMap1');
-    var svgMapContainer = document.getElementById('svgMap');
-    var containerWidth = svgMapContainer.clientWidth;
-    var containerHeight = svgMapContainer.clientHeight;
-    svgMap.setAttribute('width', containerWidth);
-    svgMap.setAttribute('height', containerHeight);
-  });
-
-fetch('../svgmaps/' + mapId + '.svg')
-      .then(response => response.text())
-      .then(svgData => {
-        // Append the SVG data to the SVG element
-        const svgContainer = document.getElementById('svgMap');
-        svgContainer.innerHTML = svgData;
-        let marks = document.getElementsByClassName('mark');
-        // Attach event listeners to svg map elements
-        for (let i = 0; i < marks.length; i++) {
-            marks[i].addEventListener('mouseover', showPopupOnMap);
-            marks[i].addEventListener('dblclick', showPopupOnMap);
-}
-      })
-      .catch(err => {
-        console.error('Error fetching SVG file:', err);
-
+fetch('/api/territories/lands/' + 'Гимназия')
+.then(response => response.json()).then(data => {
+    data.forEach(element => {
+        const SVGMAP = element.SVGMAP;
+        console.log('eleSVGMAPment.');
+        if(SVGMAP != null)
+        {
+            svgMapDisplay.insertAdjacentHTML('beforeend', SVGMAP);
+        }
+        
     });
+    const SVGPATH = document.querySelectorAll("path");
+    
+    for (let i = 0; i < SVGPATH.length; i++) {
+        SVGPATH[i].classList.add("mark");
+        SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
+        SVGPATH[i].addEventListener('dblclick', showLandMapEvt);
+      }
+});
 
-    function fetchData (id) {
-        fetch('/api/territories/lands/' + id)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-    
-        for (let i = 0; i < data.length; i++) {
-            let link = document.createElement('a');
-            link.href = `/territories?id=${data[i].ID}`; // Set the href based on the data from the database
-            link.textContent = `- ${data[i].CODE}`;
-    
-            let elem = document.createElement('div');
-            elem.appendChild(link);
-            
-            // Append element to popupOnMap div before the first child
-            popupOnMap.appendChild(elem);
-          }
-      });
-    }
-    
+
+
+function fetchData (id) {
+  fetch('/api/territories/lands/' + id)
+ .then(response => response.json())
+ .then(data => {
+   console.log(data)
+
+   for (let i = 0; i < data.length; i++) {
+       //let link = document.createElement('a');
+       //link.href = `/territories?id=${data[i].ID}`; // Set the href based on the data from the database
+       //link.textContent = `- ${data[i].CODE}`;
+       let text = document.createElement('p');
+       text.textContent = `- ${data[i].CODE}`;
+       let elem = document.createElement('div');
+       elem.appendChild(text);
+       
+       // Append element to popupOnMap div before the first child
+       popupOnMap.appendChild(elem);
+     }
+ });
+}
+
 // Display popup window
 function showPopupOnMap(evt) {
     popupOnMap.innerHTML = '';
