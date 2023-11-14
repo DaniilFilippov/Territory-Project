@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const territoryRoute = require('./routes/territoryRoute');
 const landsRoute = require('./routes/landsRoute');
+const buildingsRoute = require('./routes/buildingsRoute');
 const path = require('path');
 
 const app = express();
@@ -43,6 +44,22 @@ app.get('/lands', function(req, res) {
     res.sendFile(path.join(__dirname,'client','pages','landmap.html'));  
 }); 
 
+//lands by id
+app.get('/buildings/', function(req, res) {
+    const landId = req.params.id;
+
+    res.sendFile(path.join(__dirname,'client','pages','buildingmap.html'));  
+}); 
+
+
+//lands by id
+app.get('/buildings/:id', function(req, res) {
+    const landId = req.params.id;
+
+    res.sendFile(path.join(__dirname,'client','pages','buildingmap.html'));  
+}); 
+
+
 //Territory by id
 app.get('/lands/:id', function(req, res) {
     const landId = req.params.id;
@@ -52,5 +69,6 @@ app.get('/lands/:id', function(req, res) {
 
 app.use('/api', territoryRoute);
 app.use('/api', landsRoute);
+app.use('/api', buildingsRoute);
 
 app.listen(process.env.PORT || port);

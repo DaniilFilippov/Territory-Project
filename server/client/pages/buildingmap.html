@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <title>Карта</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-title">
+                <a href="../home">
+                    <img src="../src/RUT_rus.svg" alt="Логотип РУТ (МИИТ)" class="header-logo">
+                </a>
+                <h1>Российский университет транспорта</h1>
+            </div>
+            <div class="menu-toggle">☰</div> <!-- Иконка меню всегда справа -->
+            <nav class="nav-links">
+                <a href="home" class="nav-link">Главная</a>
+                <a href="territories" class="nav-link">Территории</a>
+                <a href="lands" class="nav-link">Земельные участки</a>
+                <a href="buildings" class="nav-link">Здания и сооружения</a>
+            </nav>
+        </div>
+    </header>
+    <section class="buildings">
+        
+        <h2 class="nameOfBuildings"></h2>
+        <div class="container" align="left">
+            <p>
+                <select id = "buildingFloors"  onchange="fc(this);">
+                <option disabled>Выберите этаж</option>
+               </select>
+            </p>
+        </div>
+        
+        
+        
+        <div class="svgMap"></div>
+    
+        <div class="popupOnMap" onclick="showBuildings(this)" >
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="logo-container">
+                <a href="../home">
+                    <img src="../src/RUT_rus.svg" alt="Логотип РУТ (МИИТ)" class="miit-logo">
+                </a>
+            </div>
+            <div class="miit-info">
+                <div class="column">
+                    <p>© 2023 "Российский университет транспорта"</p>
+                </div>
+                <div class="column contact-info">
+                    <p>Адрес: 127994, г. Москва, Образцова ул., 9</p>
+                    <p><a href="tel:+74956811340">Телефон: +7 495 681-13-40</a></p>
+                    <p><a href="mailto:info@rut-miit.ru">Email: info@rut-miit.ru</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>    
+    <script src="../buildings.js"></script>
+
+</body>
+</html>

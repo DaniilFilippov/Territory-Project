@@ -1,26 +1,26 @@
 
-
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const landId = urlParams.get('id');
+const buildingId = urlParams.get('id');
 let popupOnMap = document.querySelector('.popupOnMap');
-const nameTitle = document.querySelector('.nameOfLand');
+const nameTitle = document.querySelector('.nameOfBuildings');
 const svgMapDisplay = document.querySelector('.svgMap');
+const buildingsFloors = document.getElementById('buildingFloors');
+let data = ['Option 1', 'Option 2', 'Option 3'];
 
-document.title = "Земельный участок: " + landId;
-nameTitle.textContent = "Земельный участок - " + landId;
+document.title = "Здание: " + buildingId;
+nameTitle.textContent = "Здание - " + buildingId;
 
-// Add event listener to adjust SVG map size on browser zoom
-window.addEventListener('resize', function() {
-  var svgMap = document.getElementById('svgMap1');
-  var svgMapContainer = document.getElementById('svgMap');
-  var containerWidth = svgMapContainer.clientWidth/2;
-  var containerHeight = svgMapContainer.clientHeight/2;
-  svgMap.setAttribute('width', containerWidth);
-  svgMap.setAttribute('height', containerHeight);
-});
 
-fetch('/api/lands/' + landId)
+// 3. Loop through the data and create options
+data.forEach(function(item) {
+    let option = document.createElement('option');
+    option.value = item.toLowerCase().replace(/\s+/g, '-');
+    option.textContent = item;
+    buildingsFloors.appendChild(option);
+  });
+
+fetch('/api/buildings/' + buildingId)
 .then(response => response.json()).then(data => {
     data.forEach(element => {
         const SVGMAP = element.SVGMAP;
@@ -41,9 +41,8 @@ fetch('/api/lands/' + landId)
 });
 
 
-
 function fetchData (id) {
-  fetch('/api/territories/lands/' + id)
+  fetch('/api/lands/buildings/' + id)
  .then(response => response.json())
  .then(data => {
    console.log(data)
@@ -95,24 +94,16 @@ function showPopupOnMap(evt) {
     }
   });
 
-  function showBuildings(sender) {
+  function showLandMap(sender) {
   
     console.log("Show " + sender.id);
-    window.location.href = `/buildings?id=${sender.id}`
+    window.location.href = `/map?id=${sender.id}`
   }
   
   function showLandMapEvt(evt) {
     
     console.log("Show " + evt.target.id);
-    window.location.href = `/buildings?id=${evt.target.id}`
+    window.location.href = `/map?id=${evt.target.id}`
   }
 
-
-  function hidePopupOnMap(evt) {
-    if (!popupOnMap.contains(evt.target)) {
-      // Hide the popup
-      popupOnMap.style.visibility = 'hidden';
-      popupOnMap.innerHTML = '';
-      console.log('Triggered');
-    }
-  }
+ 
