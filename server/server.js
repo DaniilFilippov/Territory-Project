@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const territoryRoute = require('./routes/territoryRoute');
 const landsRoute = require('./routes/landsRoute');
 const buildingsRoute = require('./routes/buildingsRoute');
+const floorsRoomsRoute = require('./routes/floorsRoomsRoute');
 const path = require('path');
 
 const app = express();
@@ -70,5 +71,6 @@ app.get('/lands/:id', function(req, res) {
 app.use('/api', territoryRoute);
 app.use('/api', landsRoute);
 app.use('/api', buildingsRoute);
+app.use('/api', floorsRoomsRoute);
 
 app.listen(process.env.PORT || port);

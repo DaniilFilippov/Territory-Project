@@ -34,6 +34,8 @@ async function getAllBuildings(req, res) {
     }
 }
 
+
+
 module.exports = {
     getBuildingById,
     getBuildingsOfLands,

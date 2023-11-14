@@ -6,25 +6,16 @@ let popupOnMap = document.querySelector('.popupOnMap');
 const nameTitle = document.querySelector('.nameOfBuildings');
 const svgMapDisplay = document.querySelector('.svgMap');
 const buildingsFloors = document.getElementById('buildingFloors');
-let data = ['Option 1', 'Option 2', 'Option 3'];
 
 document.title = "Здание: " + buildingId;
 nameTitle.textContent = "Здание - " + buildingId;
 
-
-// 3. Loop through the data and create options
-data.forEach(function(item) {
-    let option = document.createElement('option');
-    option.value = item.toLowerCase().replace(/\s+/g, '-');
-    option.textContent = item;
-    buildingsFloors.appendChild(option);
-  });
+fetchFloors(buildingId);
 
 fetch('/api/buildings/' + buildingId)
 .then(response => response.json()).then(data => {
     data.forEach(element => {
         const SVGMAP = element.SVGMAP;
-        console.log('eleSVGMAPment.');
         if(SVGMAP != null)
         {
             svgMapDisplay.insertAdjacentHTML('beforeend', SVGMAP);
@@ -40,6 +31,71 @@ fetch('/api/buildings/' + buildingId)
       }
 });
 
+//Запись этажей в выпадающий список
+function fetchFloors(id) {
+    fetch('/api/floors/' + id)
+    .then(response => response.json())
+    .then(data => {
+      data.sort((a, b) => a.ID.localeCompare(b.ID));
+   
+      data.forEach(function(item) {
+        let option = document.createElement('option');
+        let str = item.ID;
+        console.log(str);
+        let parts = str.split('/');
+        let result = parts[1].trim();
+        
+        option.value = item.ID;
+        option.textContent = result;
+        buildingsFloors.appendChild(option);
+      });
+
+
+      for (let i = 0; i < data.length; i++) {
+          //let link = document.createElement('a');
+          //link.href = `/territories?id=${data[i].ID}`; // Set the href based on the data from the database
+          //link.textContent = `- ${data[i].CODE}`;
+          let text = document.createElement('p');
+          text.textContent = `- ${data[i].CODE}`;
+          let elem = document.createElement('div');
+          elem.appendChild(text);
+          
+          // Append element to popupOnMap div before the first child
+          popupOnMap.appendChild(elem);
+        }
+    });
+};
+
+//<!--Функция смены этажа пользователем-->
+function changeFloor(sender)
+{     
+        let str = sender.value;
+        
+        let parts = str.split('/');
+        let result = parts[0].trim() + ' ' + parts[1].trim();
+        console.log(result);
+
+    fetch('/api/buildings/floors/' + result)
+    .then(response => response.json()).then(data => {
+        
+        data.forEach(element => {
+           const SVGMAP = element.SVGMAP;
+           if(SVGMAP != null)
+           {
+               svgMapDisplay.innerHTML = '';
+               svgMapDisplay.insertAdjacentHTML('beforeend', SVGMAP);
+           }
+           
+        });
+        const SVGPATH = document.querySelectorAll("path");
+       
+        for (let i = 0; i < SVGPATH.length; i++) {
+           SVGPATH[i].classList.add("mark");
+           SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
+           SVGPATH[i].addEventListener('dblclick', showLandMapEvt);
+        }
+    });
+}
 
 function fetchData (id) {
   fetch('/api/lands/buildings/' + id)
