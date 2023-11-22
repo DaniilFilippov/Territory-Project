@@ -6,7 +6,6 @@ const landId = urlParams.get('id');
 let popupOnMap = document.querySelector('.popupOnMap');
 const nameTitle = document.querySelector('.nameOfLand');
 const svgMapDisplay = document.querySelector('.svgMap');
-
 document.title = "Земельный участок: " + landId;
 nameTitle.textContent = "Земельный участок - " + landId;
 
@@ -24,7 +23,6 @@ fetch('/api/lands/' + landId)
 .then(response => response.json()).then(data => {
     data.forEach(element => {
         const SVGMAP = element.SVGMAP;
-        console.log('eleSVGMAPment.');
         if(SVGMAP != null)
         {
             svgMapDisplay.insertAdjacentHTML('beforeend', SVGMAP);
@@ -67,7 +65,17 @@ function fetchData (id) {
 function showPopupOnMap(evt) {
     popupOnMap.innerHTML = '';
     let head = document.createElement('h3');
-    head.textContent = this.id;
+    
+    fetch('/api/buildings/' + this.id)
+    .then(response => response.json()).then(data => {
+        data.forEach(element => {
+
+            head.textContent = element.NOTE;
+            console.log(element.NOTE);
+            
+        });
+        
+    });
     popupOnMap.id = this.id;
     popupOnMap.appendChild(head);
       

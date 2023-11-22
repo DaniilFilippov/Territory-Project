@@ -6,9 +6,7 @@ let popupOnMap = document.querySelector('.popupOnMap');
 const nameTitle = document.querySelector('.nameOfBuildings');
 const svgMapDisplay = document.querySelector('.svgMap');
 const buildingsFloors = document.getElementById('buildingFloors');
-
-document.title = "Здание: " + buildingId;
-nameTitle.textContent = "Здание - " + buildingId;
+let activeFloor = '';
 
 fetchFloors(buildingId);
 
@@ -16,6 +14,9 @@ fetch('/api/buildings/' + buildingId)
 .then(response => response.json()).then(data => {
     data.forEach(element => {
         const SVGMAP = element.SVGMAP;
+        document.title = element.NOTE;
+        nameTitle.textContent = element.NOTE;
+
         if(SVGMAP != null)
         {
             svgMapDisplay.insertAdjacentHTML('beforeend', SVGMAP);
@@ -66,34 +67,39 @@ function fetchFloors(id) {
     });
 };
 
-//<!--Функция смены этажа пользователем-->
+
+
+//Функция смены этажа пользователем
 function changeFloor(sender)
 {     
         let str = sender.value;
         
         let parts = str.split('/');
-        let result = parts[0].trim() + ' ' + parts[1].trim();
-        console.log(result);
+        activeFloor = parts[0].trim() + ' ' + parts[1].trim();
 
-    fetch('/api/buildings/floors/' + result)
+    fetch('/api/buildings/floors/' + activeFloor)
     .then(response => response.json()).then(data => {
         
         data.forEach(element => {
            const SVGMAP = element.SVGMAP;
-           if(SVGMAP != null)
-           {
+         
                svgMapDisplay.innerHTML = '';
                svgMapDisplay.insertAdjacentHTML('beforeend', SVGMAP);
-           }
+           
            
         });
         const SVGPATH = document.querySelectorAll("path");
-       
+        const SVGPOLY = document.querySelectorAll("polygon");
         for (let i = 0; i < SVGPATH.length; i++) {
            SVGPATH[i].classList.add("mark");
            SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
-           SVGPATH[i].addEventListener('dblclick', showLandMapEvt);
+           SVGPATH[i].addEventListener('dblclick', showBuildings);
         }
+        for (let i = 0; i < SVGPOLY.length; i++) {
+          SVGPOLY[i].classList.add("mark");
+          SVGPOLY[i].addEventListener('mouseover', showPopupOnMap);
+          SVGPOLY[i].addEventListener('dblclick', showBuildings);
+       }
     });
 }
 
@@ -118,7 +124,7 @@ function fetchData (id) {
  });
 }
 
-// Display popup window
+// Отображение всплывающего окна
 function showPopupOnMap(evt) {
     popupOnMap.innerHTML = '';
     let head = document.createElement('h3');
@@ -150,16 +156,41 @@ function showPopupOnMap(evt) {
     }
   });
 
-  function showLandMap(sender) {
+
+  function showBuildings(sender) {
   
     console.log("Show " + sender.id);
-    window.location.href = `/map?id=${sender.id}`
+    roomsInfo(activeFloor, sender.id);
+    
   }
   
-  function showLandMapEvt(evt) {
-    
-    console.log("Show " + evt.target.id);
-    window.location.href = `/map?id=${evt.target.id}`
+  // Скрыть всплывающее окно
+  function hidePopupOnMap(evt) {
+    if (!popupOnMap.contains(evt.target)) {
+      // Hide the popup
+      popupOnMap.style.visibility = 'hidden';
+      popupOnMap.innerHTML = '';
+      console.log('Triggered');
+    }
   }
-
  
+  function roomsInfo(floor, room) {
+    fetch('/api/floors/rooms/' + floor +'/' + room)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('data-container');
+                const row = document.createElement('tr');
+
+                // Вставляем данные в ячейки таблицы
+                Object.values(data).forEach(value => {
+                    const cell = document.createElement('td');
+                    cell.textContent = value.CODE;
+                    row.appendChild(cell);
+                });
+
+                container.appendChild(row);
+            })
+            .catch(error => console.error('Ошибка при получении данных:', error));
+
+      console.log('/api/floors/rooms/' + floor +'/' + room);
+  }
