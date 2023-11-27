@@ -7,6 +7,7 @@ const nameTitle = document.querySelector('.nameOfBuildings');
 const svgMapDisplay = document.querySelector('.svgMap');
 const buildingsFloors = document.getElementById('buildingFloors');
 let activeFloor = '';
+let tab = '';
 
 fetchFloors(buildingId);
 
@@ -29,6 +30,7 @@ fetch('/api/buildings/' + buildingId)
         SVGPATH[i].classList.add("mark");
         SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
         SVGPATH[i].addEventListener('dblclick', showLandMapEvt);
+    
       }
 });
 
@@ -90,6 +92,7 @@ function changeFloor(sender)
         });
         const SVGPATH = document.querySelectorAll("path");
         const SVGPOLY = document.querySelectorAll("polygon");
+
         for (let i = 0; i < SVGPATH.length; i++) {
            SVGPATH[i].classList.add("mark");
            SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
@@ -175,22 +178,36 @@ function showPopupOnMap(evt) {
   }
  
   function roomsInfo(floor, room) {
-    fetch('/api/floors/rooms/' + floor +'/' + room)
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById('data-container');
-                const row = document.createElement('tr');
+   
+    fetch(`/api/floors/rooms/${floor}/${room}`)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('data-container');
+            container.innerHTML = ''; // Очищаем контейнер перед добавлением новых данных
 
-                // Вставляем данные в ячейки таблицы
-                Object.values(data).forEach(value => {
-                    const cell = document.createElement('td');
-                    cell.textContent = value.CODE;
-                    row.appendChild(cell);
+            //Отображение таблицы с характеристиками комнаты
+            tab = document.getElementById('tab-room');
+            if(tab.style.display == 'none') tab.style.display = "";
+
+           
+            // Проходимся по каждой записи и добавляем их в таблицу
+            data.forEach(entry => {
+                // Создаем строку для каждой характеристики
+                Object.keys(entry).forEach(key => {
+                    if (entry[key] == '2019_Федеральное государственное автономное образовательное учреждение высшего образования "Российский университет транспорта"')
+                    {
+                      entry[key] = 'РУТ (МИИТ)';
+                    }
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${key}</td>
+                        <td>${entry[key]}</td>
+                    `;
+                    container.appendChild(row);
                 });
+            });
+        })
+        .catch(error => console.error('Ошибка при получении данных:', error));
 
-                container.appendChild(row);
-            })
-            .catch(error => console.error('Ошибка при получении данных:', error));
-
-      console.log('/api/floors/rooms/' + floor +'/' + room);
-  }
+    console.log(`/api/floors/rooms/${floor}/${room}`);
+} 
