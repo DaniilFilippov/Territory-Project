@@ -60,10 +60,8 @@ function fetchFloors(id) {
   });
 };
 
-
-
 //Функция смены этажа пользователем
-function changeFloor(sender) {   
+async function changeFloor(sender) {   
   lastSvgEltm = null;
   svgColor = null;  
   tab.style.display = 'none';
@@ -72,37 +70,42 @@ function changeFloor(sender) {
   let parts = str.split('/');
   activeFloor = parts[0].trim() + ' ' + parts[1].trim();
 
-  fetch('/api/buildings/floors/' + activeFloor)
-  .then(response => {
-      if (!response.ok) {
-          throw new Error('Ошибка интернет соединения');
+  try {
+    const response = await fetch('/api/buildings/floors/' + activeFloor);
+    if (!response.ok) {
+        throw new Error('Ошибка интернет соединения');
+    }
+    const data = await response.json();
+
+    svgMapDisplay.innerHTML = '';
+    data.forEach(element => {
+        svgMapDisplay.insertAdjacentHTML('beforeend', element.SVGMAP);
+    });
+
+
+    const  roomsInfo = await fullInfo(activeFloor);
+
+    const SVGElements = document.querySelectorAll("path, polygon, polyline");
+
+    SVGElements.forEach(async (svgElement) => {
+      svgElement.classList.add("mark");
+      svgElement.addEventListener('mouseover', showPopupOnMap);
+      svgElement.addEventListener('mouseout', hidePopupOnMap);
+      svgElement.addEventListener('click', function() {
+            showBuildings(this);
+        });
+      for(let i = 0; i < roomsInfo.length; i++) {
+        
+        let id = `${roomsInfo[i].NUMBOFPLACEMENT}-r${roomsInfo[i].NUMBOFROOM}`;
+
+        if(svgElement.id == id){
+          svgElement.style.fill = roomsInfo[i].STR_VALUE;
+        }
       }
-      return response.json();
-  })
-  .then(data => {
-      svgMapDisplay.innerHTML = '';
-      data.forEach(element => {
-          svgMapDisplay.insertAdjacentHTML('beforeend', element.SVGMAP);
-      });
-
-      const SVGElements = document.querySelectorAll("path, polygon");
-      
-      insInfo(activeFloor, element);  
-
-      SVGElements.forEach(element => {
-          element.classList.add("mark");
-          element.addEventListener('mouseover', showPopupOnMap);
-          element.addEventListener('mouseout', hidePopupOnMap);
-          element.addEventListener('click', function() {
-              showBuildings(this);
-            
-          });
-          
-      });
-  })
-  .catch(error => {
-      console.error('Ошибка при получении данных:', error);
-  });
+    });
+  } catch (error) {
+    console.error('Ошибка при получении данных:', error);
+  }
 }
 
 function fetchData (id) {
@@ -246,9 +249,17 @@ async function insInfo(floor, svgElement) {
   try {
     const response = await fetch(`/api/rooms/${floor}`);
     const data = await response.json();
-
-    svgElement.style.fill = '#ff0000';
-
+    return data; // Возвращаем данные
+  } catch (error) {
+    console.error('Ошибка при получении данных:', error);
+    return []; // Возвращаем пустой массив в случае ошибки
+  }
+}
+//
+async function fullInfo(floor, svgElement) {
+  try {
+    const response = await fetch(`/api/floors/info/${floor}`);
+    const data = await response.json();
     return data; // Возвращаем данные
   } catch (error) {
     console.error('Ошибка при получении данных:', error);

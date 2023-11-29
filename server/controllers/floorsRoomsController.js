@@ -192,6 +192,33 @@ async function getColorOfInsDepart(req, res) {
     }
 } 
 
+// Извлечение номер комнаты, цвет, подразделение в одном запрсое
+async function getInfoRoomsByFloor(req, res) {
+  try {
+        const id = req.params.floorId; 
+
+        let str = id;
+        let parts = str.split(' ');
+        let resID = parts[0].trim() + ' /';
+        for (let i = 1; i < parts.length; i++) {
+          resID = resID + ' ' + parts[i].trim();
+        }
+        console.log('result' + resID);
+        const result = await dbOperations.executeSQL(`select fr.ID, fr.numbofplacement, fr.numbofroom, ins.code, val.str_value from fd_t_list_of_rooms fr
+        left join fd_t_divisions_room div on fr.rn = div.prn 
+        left join ins_department ins on div.ins_departmentrn = ins.rn
+        left join DOCS_PROPS_VALS val on ins.rn = val.unit_rn
+          where val.unitcode = 'INS_DEPARTMENT'
+          and fr.prn = (select ff.rn from fd_t_list_of_floors ff  where ff.ID = :resID)
+          and val.str_value LIKE '#%'`, {resID});
+      res.status(200).json(result);
+
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+} 
+
+
 
 module.exports = {
     getFloorsOfBuilding,
@@ -199,5 +226,6 @@ module.exports = {
     getRoomsOfFloors,
     getRoomsOfFloorsById,
     getColorOfInsDepart,
-    getRoomsOfFloorsEdit
+    getRoomsOfFloorsEdit,
+    getInfoRoomsByFloor
 }
