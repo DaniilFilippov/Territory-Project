@@ -208,7 +208,11 @@ async function getInfoRoomsByFloor(req, res) {
         (SELECT name 
           FROM DMSENUMVALUES  
           WHERE  prn = (select rn from DMSDOMAINS where code = 'ClassifReporting' ) 
-          AND value_num = fr.CLASSIFREPORTINGVPOSPO) as "VPOSPO"        
+          AND value_num = fr.CLASSIFREPORTINGVPOSPO) as "ClassifReporting",
+        (SELECT name 
+          FROM DMSENUMVALUES  
+          WHERE  prn = (select rn from DMSDOMAINS where code = 'ClassifEconActiv' ) 
+          AND value_num = fr.CLASSIFECONACTIVITY) as "ClassifEconActiv"         
         from fd_t_list_of_rooms fr
         left join fd_t_divisions_room div on fr.rn = div.prn 
         left join ins_department ins on div.ins_departmentrn = ins.rn

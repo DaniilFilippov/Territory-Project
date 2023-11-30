@@ -18,7 +18,7 @@ let svgColor;
 let activeRoomsInfo = '';
 let SVGElements = '';
 let amountOfVPOElem = '';
-
+let amountOfEcAcElem= '';
 
 fetchFloors(buildingId);
 
@@ -59,8 +59,8 @@ for (let key in domenDictionary) {
 
 
 //Отображение комнат по ВПО СПО
-function showInfoOfDom(sender) {
-  amountOfVPOElem =  document.querySelector(sender.value + 'txt');
+function showVPOSPO(sender) {
+  amountOfVPOElem =  document.querySelector('.ClassifReportingtxt');
   amountOfVPOElem.innerHTML = '';
   let amountVpoSpo = 0;
   let typeVpoSpo = sender.value;
@@ -87,7 +87,7 @@ function showInfoOfDom(sender) {
         
         let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
   
-        if(svgElement.id == id && activeRoomsInfo[i].VPOSPO == typeVpoSpo){
+        if(svgElement.id == id && activeRoomsInfo[i].ClassifReporting == typeVpoSpo){
           svgElement.style.fill = '#00FF00';
           amountVpoSpo +=1;
           break;
@@ -106,16 +106,16 @@ function showInfoOfDom(sender) {
 
 
 //Отображение комнат по ВПО СПО
-function showVPOSPO(sender) {
-  amountOfVPOElem =  document.querySelector('.amountOfVPO');
-  amountOfVPOElem.innerHTML = '';
-  let amountVpoSpo = 0;
-  let typeVpoSpo = sender.value;
+function showEconomActive(sender) {
+  amountOfEcAcElem =  document.querySelector('.ClassifEconActivtxt');
+  amountOfEcAcElem.innerHTML = '';
+  let amount = 0;
+  let type = sender.value;
   tab.style.display = 'none';
   svgColor = '';
   lastSvgEltm = '';
 
-  if (typeVpoSpo === 'default') {
+  if (type === 'default') {
     SVGElements.forEach(async (svgElement) => {
       for(let i = 0; i < activeRoomsInfo.length; i++) {
         
@@ -128,15 +128,18 @@ function showVPOSPO(sender) {
     });
   }
   else {
+    let x = 0;
     SVGElements.forEach(async (svgElement) => {
-  
+      
       for(let i = 0; i < activeRoomsInfo.length; i++) {
         
         let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
-  
-        if(svgElement.id == id && activeRoomsInfo[i].VPOSPO == typeVpoSpo){
-          svgElement.style.fill = '#00FF00';
-          amountVpoSpo +=1;
+        if(svgElement.id == id && activeRoomsInfo[i].ClassifEconActiv === type){
+
+          console.log(activeRoomsInfo[i].ClassifEconActiv + '  === ' + type);
+          x++;
+          svgElement.style.fill = '#0000FF';
+          amount +=1;
           break;
         } 
         else {
@@ -145,9 +148,11 @@ function showVPOSPO(sender) {
        
       }
     });
-    var textNode = document.createTextNode(`Кол-во комнат типа "${typeVpoSpo}": ${amountVpoSpo}`);
-    amountOfVPOElem.appendChild(textNode);  
+    var textNode = document.createTextNode(`Кол-во комнат типа "${type}": ${amount}`);
+    amountOfEcAcElem.appendChild(textNode);  
+    console.log(x);
   }
+  
 
 }
 
