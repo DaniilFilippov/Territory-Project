@@ -60,9 +60,7 @@ function showPopupOnMap(evt) {
     popupOnMap.id = this.id;
     popupOnMap.appendChild(head);
       
-    fetchData(this.id);
-    
-    console.log(this.id);
+    //fetchData(this.id);
   
     // Show popup
     if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility')) {

@@ -1,3 +1,8 @@
+const domenDictionary = {
+  "EnonActiv": "ClassifEconActiv",
+  "VPOSPO": "ClassifReporting"
+};
+
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -10,6 +15,11 @@ let activeFloor = '';
 let tab = document.getElementById('tab-room');;
 let lastSvgEltm;
 let svgColor;
+let activeRoomsInfo = '';
+let SVGElements = '';
+let amountOfVPOElem = '';
+
+
 fetchFloors(buildingId);
 
 fetch('/api/buildings/' + buildingId)
@@ -26,6 +36,120 @@ fetch('/api/buildings/' + buildingId)
         
     });
 });
+
+console.log(domenDictionary.EnonActiv);
+
+// Заполнение select'ов значениями
+for (let key in domenDictionary) {
+  if (domenDictionary.hasOwnProperty(key)) {
+      console.log(key + ": " + domenDictionary[key]);
+      fetch('/api/floors/info/domen/' + domenDictionary[key])
+      .then(response => response.json()).then(data => {
+        data.forEach(element => {
+          // Добавляем опции в select
+          var select = document.getElementById(domenDictionary[key]);
+          var el = document.createElement("option");
+          el.textContent = element.NAME;
+          el.value = element.NAME;
+          select.appendChild(el);
+      });
+    });
+  }
+}
+
+
+//Отображение комнат по ВПО СПО
+function showInfoOfDom(sender) {
+  amountOfVPOElem =  document.querySelector(sender.value + 'txt');
+  amountOfVPOElem.innerHTML = '';
+  let amountVpoSpo = 0;
+  let typeVpoSpo = sender.value;
+  tab.style.display = 'none';
+  svgColor = '';
+  lastSvgEltm = '';
+
+  if (typeVpoSpo === 'default') {
+    SVGElements.forEach(async (svgElement) => {
+      for(let i = 0; i < activeRoomsInfo.length; i++) {
+        
+        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
+        if(svgElement.id === id){
+          svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
+          console.log(activeRoomsInfo[i].STR_VALUE);
+        }
+      }
+    });
+  }
+  else {
+    SVGElements.forEach(async (svgElement) => {
+  
+      for(let i = 0; i < activeRoomsInfo.length; i++) {
+        
+        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
+  
+        if(svgElement.id == id && activeRoomsInfo[i].VPOSPO == typeVpoSpo){
+          svgElement.style.fill = '#00FF00';
+          amountVpoSpo +=1;
+          break;
+        } 
+        else {
+          svgElement.style.fill = '#808080';
+        }
+       
+      }
+    });
+    var textNode = document.createTextNode(`Кол-во комнат типа "${typeVpoSpo}": ${amountVpoSpo}`);
+    amountOfVPOElem.appendChild(textNode);  
+  }
+
+}
+
+
+//Отображение комнат по ВПО СПО
+function showVPOSPO(sender) {
+  amountOfVPOElem =  document.querySelector('.amountOfVPO');
+  amountOfVPOElem.innerHTML = '';
+  let amountVpoSpo = 0;
+  let typeVpoSpo = sender.value;
+  tab.style.display = 'none';
+  svgColor = '';
+  lastSvgEltm = '';
+
+  if (typeVpoSpo === 'default') {
+    SVGElements.forEach(async (svgElement) => {
+      for(let i = 0; i < activeRoomsInfo.length; i++) {
+        
+        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
+        if(svgElement.id === id){
+          svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
+          console.log(activeRoomsInfo[i].STR_VALUE);
+        }
+      }
+    });
+  }
+  else {
+    SVGElements.forEach(async (svgElement) => {
+  
+      for(let i = 0; i < activeRoomsInfo.length; i++) {
+        
+        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
+  
+        if(svgElement.id == id && activeRoomsInfo[i].VPOSPO == typeVpoSpo){
+          svgElement.style.fill = '#00FF00';
+          amountVpoSpo +=1;
+          break;
+        } 
+        else {
+          svgElement.style.fill = '#808080';
+        }
+       
+      }
+    });
+    var textNode = document.createTextNode(`Кол-во комнат типа "${typeVpoSpo}": ${amountVpoSpo}`);
+    amountOfVPOElem.appendChild(textNode);  
+  }
+
+}
 
 //Запись этажей в выпадающий список
 function fetchFloors(id) {
@@ -47,12 +171,6 @@ function fetchFloors(id) {
       option.value = item.ID;
       option.textContent = result;
       buildingsFloors.appendChild(option);
-
-      let text = document.createElement('p');
-      text.textContent = `- ${item.CODE}`;
-      let elem = document.createElement('div');
-      elem.appendChild(text);
-      popupOnMap.appendChild(elem);
     });
   })
   .catch(error => {
@@ -69,7 +187,7 @@ async function changeFloor(sender) {
   let str = sender.value;
   let parts = str.split('/');
   activeFloor = parts[0].trim() + ' ' + parts[1].trim();
-
+  document.getElementById('ClassifReporting').value = 'default';
   try {
     const response = await fetch('/api/buildings/floors/' + activeFloor);
     if (!response.ok) {
@@ -83,9 +201,8 @@ async function changeFloor(sender) {
     });
 
 
-    const  roomsInfo = await fullInfo(activeFloor);
-
-    const SVGElements = document.querySelectorAll("path, polygon, polyline");
+    activeRoomsInfo = await fullInfo(activeFloor);
+    SVGElements = document.querySelectorAll("path, polygon, polyline");
 
     SVGElements.forEach(async (svgElement) => {
       svgElement.classList.add("mark");
@@ -94,12 +211,12 @@ async function changeFloor(sender) {
       svgElement.addEventListener('click', function() {
             showBuildings(this);
         });
-      for(let i = 0; i < roomsInfo.length; i++) {
+      for(let i = 0; i < activeRoomsInfo.length; i++) {
         
-        let id = `${roomsInfo[i].NUMBOFPLACEMENT}-r${roomsInfo[i].NUMBOFROOM}`;
+        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
 
         if(svgElement.id == id){
-          svgElement.style.fill = roomsInfo[i].STR_VALUE;
+          svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
         }
       }
     });

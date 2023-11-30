@@ -497,3 +497,31 @@ td {
 th:first-child, td:first-child {
   text-align: left;
 }
+
+.buildings {
+  display: flex; /* Используем Flexbox для расположения элементов */
+}
+.nameOfBuildings {
+  flex-wrap: wrap;
+}
+
+.sidebar {
+  flex: 1; /* Боковое меню занимает меньше места */
+  max-width: 300px; /* Максимальная ширина бокового меню */
+}
+
+.svgMap {
+  flex: 3; /* Элемент с картой занимает больше места */
+  /* Дополнительные стили для svgMap */
+}
+.container {
+    /* Добавляем нижнюю границу для каждого контейнера */
+    border-bottom: 1px solid #ccc; /* Серая граница */
+    margin-bottom: 10px; /* Отступ снизу */
+    padding-bottom: 10px; /* Отступ внутри контейнера снизу */
+}
+
+.container:last-child {
+    /* У последнего контейнера убираем границу, если она не нужна */
+    border-bottom: none;
+}

@@ -204,7 +204,12 @@ async function getInfoRoomsByFloor(req, res) {
           resID = resID + ' ' + parts[i].trim();
         }
         console.log('result' + resID);
-        const result = await dbOperations.executeSQL(`select fr.ID, fr.numbofplacement, fr.numbofroom, ins.code, val.str_value from fd_t_list_of_rooms fr
+        const result = await dbOperations.executeSQL(`select fr.ID, fr.numbofplacement, fr.numbofroom, ins.code, val.str_value,
+        (SELECT name 
+          FROM DMSENUMVALUES  
+          WHERE  prn = (select rn from DMSDOMAINS where code = 'ClassifReporting' ) 
+          AND value_num = fr.CLASSIFREPORTINGVPOSPO) as "VPOSPO"        
+        from fd_t_list_of_rooms fr
         left join fd_t_divisions_room div on fr.rn = div.prn 
         left join ins_department ins on div.ins_departmentrn = ins.rn
         left join DOCS_PROPS_VALS val on ins.rn = val.unit_rn
@@ -218,6 +223,18 @@ async function getInfoRoomsByFloor(req, res) {
     }
 } 
 
+// Извлечение типов из домена паруса
+async function getNamesOfDomen(req, res) {
+  try {
+      const code  = req.params.code; 
+         const result = await dbOperations.executeSQL(`SELECT name 
+         FROM DMSENUMVALUES  
+         WHERE  prn = (select rn from DMSDOMAINS where code = :code)`, {code});
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+} 
 
 
 module.exports = {
@@ -227,5 +244,6 @@ module.exports = {
     getRoomsOfFloorsById,
     getColorOfInsDepart,
     getRoomsOfFloorsEdit,
-    getInfoRoomsByFloor
+    getInfoRoomsByFloor,
+    getNamesOfDomen
 }

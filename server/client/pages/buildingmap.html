@@ -24,23 +24,55 @@
             </nav>
         </div>
     </header>
-    <section class="buildings">
+    <section>
         
         <h2 class="nameOfBuildings"></h2>
-        <div class="container" align="left">
-            <p>
-                <select id = "buildingFloors"  onchange="changeFloor(this);">
-                <option disabled selected>Выберите этаж</option>
-               </select>
-            </p>
-        </div>
-        
-        
-        
-        <div class="svgMap"></div>
-    
-        <div class="popupOnMap" onclick="showBuildings(this)" >
 
+        <div  class="buildings">
+            <div class="sidebar">
+                <div class="container">
+                    <h4>Выберите этаж</h4>
+                    <p>
+                        <select id="buildingFloors" onchange="changeFloor(this);">
+                            <option value="" selected>Выберите этаж</option>
+                            <!-- Другие опции -->
+                        </select>
+                    </p>
+                </div>
+                <div class="container">
+                    <h4>Классификация в соответствии с отчетностью по ВПО, СПО</h4>
+                    <p>
+                        <select id="ClassifReporting" onchange="showVPOSPO(this);">
+                            <option value="default" selected>Выберите классификацию по ВПО СПО</option>
+
+                            <!-- Другие опции -->
+                        </select>
+                    </p>  
+                    <p class = "amountOfVPO"></p>
+                </div>
+                <div class="container">
+                    <h4>Классификация в соответствии с хоз. деятельностью</h4>
+                    <p>
+                        <select id="ClassifEconActiv" onchange="showEconActiv(this);">
+                            <option value="default" selected>Выберите классификацию</option>
+
+                            <!-- Другие опции -->
+                        </select>
+                        
+                    </p>
+                </div>
+            </div>
+        
+            <div class="svgMap">
+                <!-- Содержимое для svgMap -->
+            </div>
+            
+        
+            <div class="popupOnMap" onclick="showBuildings(this)" >
+    
+            </div>
+        
+            
         </div>
         <table style='display:none' id = "tab-room">
             <thead>
@@ -73,7 +105,7 @@
             </div>
         </div>
     </footer>    
-    <script src="../buildings.js"></script>
+    <script  src="../buildings.js"></script>
 
 </body>
 </html>

@@ -61,7 +61,7 @@ function showPopupOnMap(evt) {
   popupOnMap.id = this.id;
   popupOnMap.appendChild(head);
    
-  fetchData();
+  //fetchData();
  
   console.log(this.id);
 
