@@ -1,6 +1,8 @@
 const domenDictionary = {
   "EnonActiv": "ClassifEconActiv",
-  "VPOSPO": "ClassifReporting"
+  "VPOSPO": "ClassifReporting",
+  "PurposeOfRoom": "PurposeOfRoom",
+  "TypeOfRoom":"TypeOfRoom"
 };
 
 
@@ -92,22 +94,31 @@ function showDom(sender) {
           
           switch (sender.id) {
             case 'ClassifReporting':
-                svgElement.classList.add('animated-fill');
-                svgElement.style.fill = '#00ff00';
-                break;
+              svgElement.classList.add('animated-svg');
+              animateSvg(svgElement, '#00ff00');
+              break;
             
             case 'ClassifEconActiv':
-              svgElement.classList.add('animated-fill');
-              svgElement.style.fill = '#0000FF';
+              svgElement.classList.add('animated-svg');
+              animateSvg(svgElement, '#0000FF');
                 break;
+            case 'PurposeOfRoom':
+              svgElement.classList.add('animated-svg');
+              animateSvg(svgElement, '#FF6600');
+                break;
+            case 'TypeOfRoom':
+              svgElement.classList.add('animated-svg');
+              animateSvg(svgElement, '#fb00ff');
+              break;
             default:
-              //svgElement.style.fill = '#000000';
+              svgElement.style.fill = '#000000';
+              break;
           }
           amount +=1;
           break;
         } 
         else {
-          svgElement.classList.add('animated-fill');
+          
           svgElement.style.fill = '#808080';
         }
        
@@ -126,7 +137,15 @@ function showDom(sender) {
 }
 
 }
+function animateSvg(svgElement, color) {
+  svgElement.classList.add('animated-svg'); // Добавляем класс для анимации
+  
+  svgElement.addEventListener('animationend', function() {
+    svgElement.classList.remove('animated-svg'); // Удаляем класс после завершения анимации
+  }, { once: true }); // Обработчик события будет вызван только один раз
 
+  svgElement.style.fill = color;
+}
 
 //Запись этажей в выпадающий список
 function fetchFloors(id) {
@@ -164,7 +183,12 @@ async function changeFloor(sender) {
   let str = sender.value;
   let parts = str.split('/');
   activeFloor = parts[0].trim() + ' ' + parts[1].trim();
+
   document.getElementById('ClassifReporting').value = 'default';
+  document.getElementById('ClassifEconActiv').value = 'default';
+  document.getElementById('PurposeOfRoom').value = 'default';
+
+
   try {
     const response = await fetch('/api/buildings/floors/' + activeFloor);
     if (!response.ok) {
@@ -182,6 +206,7 @@ async function changeFloor(sender) {
     SVGElements = document.querySelectorAll("path, polygon, polyline");
 
     SVGElements.forEach(async (svgElement) => {
+      svgElement.classList.add('animated-fill');
       svgElement.classList.add("mark");
       svgElement.addEventListener('mouseover', showPopupOnMap);
       svgElement.addEventListener('mouseout', hidePopupOnMap);
@@ -276,12 +301,16 @@ function hidePopupOnMap(evt) {
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('data-container');
+            let tabContainer = document.querySelector('.tabContainer'); 
             container.innerHTML = ''; // Очищаем контейнер перед добавлением новых данных
 
+            tabContainer.style.border = '1px solid rgba(179, 171, 171, 0.553)';
+            tabContainer.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.2)'; 
+
+              
             //Отображение таблицы с характеристиками комнаты
             if(tab.style.display == 'none') tab.style.display = "";
 
-            
             // Проходимся по каждой записи и добавляем их в таблицу
             data.forEach(entry => {
                 // Создаем строку для каждой характеристики

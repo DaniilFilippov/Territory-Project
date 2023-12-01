@@ -5,7 +5,7 @@ async function getFloorsOfBuilding(req, res) {
     try {
         
         const { prnID } = req.params; 
-        const result = await dbOperations.executeSQL('SELECT * FROM fd_t_list_of_floors WHERE prn = (select rn from fd_t_bsr_master where ID = :prnID)', {prnID});
+        const result = await dbOperations.executeSQL('SELECT CODE, ID FROM fd_t_list_of_floors WHERE prn = (select rn from fd_t_bsr_master where ID = :prnID)', {prnID});
         res.status(200).json(result);
       } catch (err) {
         res.status(500).json({ error: err.message });
@@ -212,7 +212,15 @@ async function getInfoRoomsByFloor(req, res) {
         (SELECT name 
           FROM DMSENUMVALUES  
           WHERE  prn = (select rn from DMSDOMAINS where code = 'ClassifEconActiv' ) 
-          AND value_num = fr.CLASSIFECONACTIVITY) as "ClassifEconActiv"         
+          AND value_num = fr.CLASSIFECONACTIVITY) as "ClassifEconActiv",
+        (SELECT name 
+          FROM DMSENUMVALUES  
+          WHERE  prn = (select rn from DMSDOMAINS where code = 'PurposeOfRoom' ) 
+          AND value_num = fr.purposeofroom) as "PurposeOfRoom",
+        (SELECT name 
+          FROM DMSENUMVALUES  
+          WHERE  prn = (select rn from DMSDOMAINS where code = 'TypeOfRoom' ) 
+          AND value_num = fr.typeofroom) as "TypeOfRoom"                  
         from fd_t_list_of_rooms fr
         left join fd_t_divisions_room div on fr.rn = div.prn 
         left join ins_department ins on div.ins_departmentrn = ins.rn
@@ -226,7 +234,7 @@ async function getInfoRoomsByFloor(req, res) {
       res.status(500).json({ error: err.message });
     }
 } 
-
+//PurposeOfRoom
 // Извлечение типов из домена паруса
 async function getNamesOfDomen(req, res) {
   try {

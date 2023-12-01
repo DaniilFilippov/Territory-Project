@@ -9,11 +9,13 @@ body {
   padding: 0;
   font-family: 'Roboto', sans-serif;
   
-  background-color: #f4f6f6;
+ 
 }
 
 section {
-  padding: 0px 50px;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .home {
@@ -26,16 +28,7 @@ section {
 
 }
 
-.home::before {
-  z-index: 777;
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
 
-}
 
 .home .content {
   z-index: 888;
@@ -82,7 +75,9 @@ section {
   object-fit: cover;
 }
 
+#globalMap {
 
+}
 
 .menu-btn {
   background: url(iconmenu.png)no-repeat;
@@ -111,34 +106,22 @@ section {
   svg {
   
     display: flex;
-          justify-content: center;
-          align-items: center; 
+      justify-content: center;
+      align-items: center; 
   }
   
   #svgmap1 {
     position: relative;
-    width: 80%;
-    height: 80%;
-    margin: 0 auto;
+    width: 75%;
+    height: 75%;
+    margin-left:75%;
+    margin-right:75%;
     padding: 0px 20px;
 
   }
 
-  #svgMap {
-    position: relative;
-    width: 80%;
-    height: 80%;
-    margin: 0 auto;
-    padding: 0px 20px;
-  }
-  
-  .svgMap {
-    position: relative;
-    width: 80%;
-    height: 80%;
-    margin: 0 auto;
-    padding: 0px 20px;
-  }
+
+
   .terries-tittle {
     position: relative;
     width: 80%;
@@ -164,18 +147,20 @@ section {
    rect:hover, polygon:hover, #hover, path:hover, ellipse:hover {
       stroke: rgba(2, 131, 229, 0.294);          /*Цвет обводки #005faa*/
       stroke-width: 1;                /*Толщина обводки*/	
-      fill: rgba(20, 58, 228, 0.74) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
+      fill: rgba(20, 58, 228, 0.614) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
+      /*opacity: 0.5;*/               /*Прозрачность*/
+  }
+    /* Цвета полигонов при наведении мышкой*/
+    rect:active, polygon:active, #active, path:active, ellipse:active {
+      stroke: rgba(2, 131, 229, 0.607);          /*Цвет обводки #005faa*/
+      stroke-width: 1;                /*Толщина обводки*/	
+      fill: rgb(255, 0, 0) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
       /*opacity: 0.5;*/               /*Прозрачность*/
   }
   
   
-  /* Цвета полигонов при наведении мышкой*/
-   rect:hover, polygon:hover, #hover, path:hover {
-      stroke: rgb(0,95,170);          /*Цвет обводки #005faa*/
-      stroke-width: 5;                /*Толщина обводки*/	
-      fill: rgba(0, 246, 0, 0.4) ;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
-      /*opacity: 0.5;*/               /*Прозрачность*/
-  }
+  
+
 
   #mypopup, #mypopup1, .popupOnMap {
     width: auto;
@@ -237,6 +222,9 @@ section {
   background: linear-gradient(to right, #1e3c72, #2a5298);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   position: relative;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .logo-title {
@@ -258,8 +246,8 @@ h1 {
 }
 
 .nav-links {
-  display: flex;
-  justify-content: flex-end;
+  display:flex;
+
   align-items: center;
   width: 100%;
   max-width: 600px;
@@ -294,37 +282,17 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: flex-start; /* изменяем выравнивание элементов на начало контейнера */
-  padding: 30px 80px;
-  width: 100%;
+
+  width: 75%;
+  margin-right: auto;
+  margin-left: auto;
   background: linear-gradient(to right, #1e3c72, #2a5298);
   color: #ffffff;
   box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
   border-top: 3px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
 }
 
-/* Декоративные элементы: добавляем "лучи" сверху и снизу футера */
-.footer-container::before,
-.footer-container::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  width: 150%;
-  height: 50px;
-  background: linear-gradient(to left, #1e3c72, transparent, #1e3c72); /* градиент для "лучей" */
-  z-index: -1; /* чтобы "лучи" были под содержимым футера */
-}
 
-.footer-container::before {
-  top: -25px; /* "лучи" сверху */
-  transform: rotate(-45deg); /* поворачиваем "лучи" */
-}
-
-.footer-container::after {
-  bottom: -25px; /* "лучи" снизу */
-  transform: rotate(45deg); /* поворачиваем "лучи" */
-}
 .logo-container {
   flex: 1;
   padding-left: 80px;
@@ -369,119 +337,34 @@ h1 {
   transform: scale(1.05);
 }
 
-/****************************************************Адаптивность**********************************************************/
-.menu-toggle {
-  display: none; /* по умолчанию иконка меню скрыта */
-  font-size: 30px; /* увеличиваем размер иконки */
-  color: #ffffff; /* делаем иконку белой */
-  cursor: pointer;
-  margin-left: 20px; /* добавляем отступ слева */
-}
-
-.nav-links {
-  display: none; /* по умолчанию меню скрыто */
-}
-
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-  .header-container {
-      flex-direction: column;
-      padding: 20px;
-  }
-
-  .logo-title {
-      justify-content: center;
-      width: 100%;
-      text-align: center;
-  }
-
-  .menu-toggle {
-      display: block; /* показываем иконку меню */
-  }
-
-  .nav-links.active {
-      display: flex; /* показываем меню при активации */
-      flex-direction: column;
-      align-items: center;
-  }
-
-  .nav-link {
-      margin: 10px 0;
-  }
-
-  .header-logo {
-      width: 200px;
-  }
-
-  h1 {
-      margin-top: 10px;
-  }
-
-  .footer-container {
-    flex-direction: column;
-    padding: 20px; /* уменьшаем отступы */
-}
-
-.miit-logo {
-  margin: 20px 0; /* устанавливаем вертикальные отступы для логотипа */
-}
-
-  .miit-info {
-      flex-direction: column;
-  }
-
-  .column {
-    margin: 10px 0; /* уменьшаем вертикальные отступы для колонок */
-}
-}
- /* Адаптивность для планшетов и десктопов */
-@media (min-width: 769px) {
-  .nav-links {
-      display: flex; /* показываем меню для планшетов и десктопов */
-  }
-
-  .menu-toggle {
-      display: none; /* скрываем иконку меню для планшетов и десктопов */
-  }
-}
-/* Адаптивность для планшетов */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .header-container,
-  .footer-container,
-  .logo-container {
-      padding: 20px 40px; /* уменьшаем отступы */
-  }
-
-  .nav-links,
-  .miit-info {
-      justify-content: space-around; /* равномерное распределение элементов */
-  }
-
-  .header-logo,
-  .miit-logo {
-      width: 220px; /* немного уменьшаем размер логотипа для планшетов */
-  }
-  .column, .miit-logo {
-    margin: 0 10px; /* уменьшаем отступы между колонками и логотипом */
-}
- 
-
-}
 
 table {
   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
   font-size: 14px;
   border-collapse: collapse;
+  box-sizing: border-box;
   text-align: center;
-  margin: 50px auto; /* Растояние от верхнего края страницы */
-  width: 80%;
+  width: 100%;
 }
 
 th, td:first-child {
   background: #AFCDE7;
   color: white;
   padding: 10px 20px;
+  
+}
+th, td:first-child {
+  background: #75a7d3;
+  color: white;
+  padding: 10px 20px;
+  
+}
+
+th:first-child, th:nth-child(2){
+  background: #418dd0;
+  color: white;
+  padding: 10px 20px;
+  
 }
 
 th, td {
@@ -498,11 +381,49 @@ th:first-child, td:first-child {
   text-align: left;
 }
 
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px; /* Закругление углов таблицы */
+  overflow: hidden; /* Скрывает содержимое, выходящее за пределы закругленных углов */
+}
+
+table th, table td {
+  border: 1px solid #ddd; /* Границы для ячеек */
+}
+
+/* Закругление углов верхних левой и правой ячеек */
+table tr:first-child th:first-child,
+table tr:first-child td:first-child {
+  border-top-left-radius: 10px;
+}
+
+table tr:first-child th:last-child,
+table tr:first-child td:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* Закругление углов нижних левой и правой ячеек */
+table tr:last-child th:first-child,
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+table tr:last-child th:last-child,
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+
+
+
 .buildings {
   display: flex; /* Используем Flexbox для расположения элементов */
 }
 .nameOfBuildings {
   flex-wrap: wrap;
+  margin: 10px;
+  padding: 20px 10px;
 }
 
 .sidebar {
@@ -510,16 +431,57 @@ th:first-child, td:first-child {
   max-width: 300px; /* Максимальная ширина бокового меню */
 }
 
-.svgMap {
-  flex: 3; /* Элемент с картой занимает больше места */
-  /* Дополнительные стили для svgMap */
+.container, .svgContainer{
+  margin: 10px;
+  padding: 10px;
 }
-.container {
-    /* Добавляем нижнюю границу для каждого контейнера */
-    border-bottom: 1px solid #ccc; /* Серая граница */
-    margin-bottom: 10px; /* Отступ снизу */
-    padding-bottom: 10px; /* Отступ внутри контейнера снизу */
+
+
+.tabContainer {
+  margin: 10px;
+  padding: 10px;
 }
+
+ .container, .svgContainer, .nameOfBuildings {
+  background: rgba(255, 255, 255, 0.379);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4.8px);
+  -webkit-backdrop-filter: blur(4.8px);
+  border: 1px solid rgba(179, 171, 171, 0.553);
+}
+
+.tabContainer {
+  background: rgba(255, 255, 255, 0.50);
+  border-radius: 16px;
+
+  backdrop-filter: blur(4.8px);
+  -webkit-backdrop-filter: blur(4.8px);
+  
+}
+
+.container:empty {
+  display: none;
+}
+
+.svgContainer:empty {
+  display: none;
+}
+/* Стилизация заголовков */
+.container h4 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #333;
+  font-size: 1.1em;
+}
+
+/* Стилизация текста после select */
+.container p {
+  color: #666;
+  margin: 5px;
+  font-size: 0.9em;
+}
+
 
 .container:last-child {
     /* У последнего контейнера убираем границу, если она не нужна */
@@ -529,3 +491,64 @@ th:first-child, td:first-child {
 .animated-fill {
   transition: fill 0.8s ease; /* Анимация изменения цвета заливки */
 }
+
+.animated-fill:hover {
+  transition: none; /* Отмена анимации при наведении */
+}
+
+.animated-svg {
+  animation: colorAndScale 1.5s forwards;
+}
+
+@keyframes colorAndScale {
+  0%, 100% {
+   
+    transform: scale(1); /* Исходный размер */
+  }
+  50% {
+   
+    transform: scale(1.05); /* Увеличенный размер */
+  }
+}
+
+/* Стилизация выпадающих списков */
+select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 1em;
+  color: #333;
+  -webkit-appearance: none; /* Убирает стандартный стиль в Chrome и Safari */
+  -moz-appearance: none; /* Убирает стандартный стиль в Firefox */
+  appearance: none; /* Убирает стандартный стиль для остальных браузеров */
+}
+
+
+/* Стилизация для стрелки выпадающего списка */
+select::-ms-expand {
+  display: none; /* Убирает стрелку в IE и Edge */
+}
+
+/* Добавление пользовательской стрелки для выпадающего списка */
+select {
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 15px;
+}
+
+/* Стиль для неактивного состояния */
+select:disabled {
+  background-color: #eee;
+  color: #aaa;
+}
+
+
+.mainBar {
+  order: 3;
+  flex: 3;
+}
+

@@ -15,7 +15,6 @@
                     <img src="../src/RUT_rus.svg" alt="Логотип РУТ (МИИТ)" class="header-logo">
                 </a>
             </div>
-            <div class="menu-toggle">☰</div> <!-- Иконка меню всегда справа -->
             <nav class="nav-links">
                 <a href="home" class="nav-link">Главная</a>
                 <a href="territories" class="nav-link">Территории</a>
@@ -40,11 +39,28 @@
                     </p>
                 </div>
                 <div class="container">
+                    <h4>Назначение команты</h4>
+                    <p>
+                        <select id="PurposeOfRoom" onchange="showDom(this);">
+                            <option value="default" selected>Выберите назначение команты</option>
+                        </select>
+                    </p>  
+                    <p class = "PurposeOfRoomtxt"></p>
+                </div>
+                <div class="container">
+                    <h4>Вид комнаты</h4>
+                    <p>
+                        <select id="TypeOfRoom" onchange="showDom(this);">
+                            <option value="default" selected>Выберите вид комнаты</option>
+                        </select>
+                    </p>  
+                    <p class = "TypeOfRoomtxt"></p>
+                </div>
+                <div class="container">
                     <h4>Классификация в соответствии с отчетностью по ВПО, СПО</h4>
                     <p>
                         <select id="ClassifReporting" onchange="showDom(this);">
-                            <option value="default" selected>Выберите классификацию по ВПО СПО</option>
-
+                            <option value="default" selected>Выберите классификацию</option>
                         </select>
                     </p>  
                     <p class = "ClassifReportingtxt"></p>
@@ -60,11 +76,21 @@
                     <p class = "ClassifEconActivtxt"></p>
                 </div>
             </div>
-        
-            <div class="svgMap">
-                <!-- Содержимое для svgMap -->
-            </div>
-            
+
+            <div class="mainBar">
+                <div  class="svgMap svgContainer"></div>
+                <div class="tabContainer">
+                    <table style='display:none' id = "tab-room">
+                        <thead>
+                            <tr>
+                                <th>Характеристика</th>
+                                <th>Значение</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-container"></tbody>
+                    </table>
+                </div></div>
+          
         
             <div class="popupOnMap" onclick="showBuildings(this)" >
     
@@ -72,15 +98,9 @@
         
             
         </div>
-        <table style='display:none' id = "tab-room">
-            <thead>
-                <tr>
-                    <th>Характеристика</th>
-                    <th>Значение</th>
-                </tr>
-            </thead>
-            <tbody id="data-container"></tbody>
-        </table>
+
+
+        
 
     </section>
 
