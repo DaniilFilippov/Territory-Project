@@ -525,3 +525,7 @@ th:first-child, td:first-child {
     /* У последнего контейнера убираем границу, если она не нужна */
     border-bottom: none;
 }
+
+.animated-fill {
+  transition: fill 0.8s ease; /* Анимация изменения цвета заливки */
+}

@@ -18,6 +18,8 @@ let svgColor;
 let activeRoomsInfo = '';
 let SVGElements = '';
 let amountOfVPOElem = '';
+let amountOfDom = '';
+let lastDom = '';
 let amountOfEcAcElem= '';
 
 fetchFloors(buildingId);
@@ -58,57 +60,10 @@ for (let key in domenDictionary) {
 }
 
 
-//Отображение комнат по ВПО СПО
-function showVPOSPO(sender) {
-  amountOfVPOElem =  document.querySelector('.ClassifReportingtxt');
-  amountOfVPOElem.innerHTML = '';
-  let amountVpoSpo = 0;
-  let typeVpoSpo = sender.value;
-  tab.style.display = 'none';
-  svgColor = '';
-  lastSvgEltm = '';
-
-  if (typeVpoSpo === 'default') {
-    SVGElements.forEach(async (svgElement) => {
-      for(let i = 0; i < activeRoomsInfo.length; i++) {
-        
-        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
-        if(svgElement.id === id){
-          svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
-          console.log(activeRoomsInfo[i].STR_VALUE);
-        }
-      }
-    });
-  }
-  else {
-    SVGElements.forEach(async (svgElement) => {
-  
-      for(let i = 0; i < activeRoomsInfo.length; i++) {
-        
-        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
-  
-        if(svgElement.id == id && activeRoomsInfo[i].ClassifReporting == typeVpoSpo){
-          svgElement.style.fill = '#00FF00';
-          amountVpoSpo +=1;
-          break;
-        } 
-        else {
-          svgElement.style.fill = '#808080';
-        }
-       
-      }
-    });
-    var textNode = document.createTextNode(`Кол-во комнат типа "${typeVpoSpo}": ${amountVpoSpo}`);
-    amountOfVPOElem.appendChild(textNode);  
-  }
-
-}
-
-
-//Отображение комнат по ВПО СПО
-function showEconomActive(sender) {
-  amountOfEcAcElem =  document.querySelector('.ClassifEconActivtxt');
-  amountOfEcAcElem.innerHTML = '';
+//Отображение комнат по характеристикам(домен)
+function showDom(sender) {
+  amountOfDom =  document.querySelector(`.${sender.id}txt`);
+  amountOfDom.innerHTML = '';
   let amount = 0;
   let type = sender.value;
   tab.style.display = 'none';
@@ -122,39 +77,56 @@ function showEconomActive(sender) {
         let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
         if(svgElement.id === id){
           svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
-          console.log(activeRoomsInfo[i].STR_VALUE);
         }
       }
     });
   }
   else {
-    let x = 0;
     SVGElements.forEach(async (svgElement) => {
-      
+  
       for(let i = 0; i < activeRoomsInfo.length; i++) {
         
         let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
-        if(svgElement.id == id && activeRoomsInfo[i].ClassifEconActiv === type){
-
-          console.log(activeRoomsInfo[i].ClassifEconActiv + '  === ' + type);
-          x++;
-          svgElement.style.fill = '#0000FF';
+  
+        if(svgElement.id == id && activeRoomsInfo[i][sender.id] == type){
+          
+          switch (sender.id) {
+            case 'ClassifReporting':
+                svgElement.classList.add('animated-fill');
+                svgElement.style.fill = '#00ff00';
+                break;
+            
+            case 'ClassifEconActiv':
+              svgElement.classList.add('animated-fill');
+              svgElement.style.fill = '#0000FF';
+                break;
+            default:
+              //svgElement.style.fill = '#000000';
+          }
           amount +=1;
           break;
         } 
         else {
+          svgElement.classList.add('animated-fill');
           svgElement.style.fill = '#808080';
         }
        
       }
     });
     var textNode = document.createTextNode(`Кол-во комнат типа "${type}": ${amount}`);
-    amountOfEcAcElem.appendChild(textNode);  
-    console.log(x);
+    amountOfDom.appendChild(textNode);  
   }
-  
+
+  for (let key in domenDictionary) {
+    if (domenDictionary.hasOwnProperty(key) && domenDictionary[key] != sender.id) {
+
+      var select = document.getElementById(domenDictionary[key]);
+      select.value = 'default';
+    }
+}
 
 }
+
 
 //Запись этажей в выпадающий список
 function fetchFloors(id) {
