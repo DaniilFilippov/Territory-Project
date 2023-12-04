@@ -425,3 +425,52 @@ async function fullInfo(floor, svgElement) {
     return []; // Возвращаем пустой массив в случае ошибки
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  const containers = document.querySelectorAll('.drag');
+
+  containers.forEach(container => {
+    container.addEventListener('dragstart', handleDragStart, false);
+    container.addEventListener('dragover', handleDragOver, false);
+    container.addEventListener('drop', handleDrop, false);
+    container.addEventListener('dragend', handleDragEnd, false);
+  });
+});
+
+let dragSrcEl = null;
+
+function handleDragStart(e) {
+  dragSrcEl = this;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
+  this.style.backgroundColor = 'rgba(227, 230, 230, 0.8)';
+}
+
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault(); // Необходимо для разрешения перетаскивания
+  }
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+
+function handleDrop(e) {
+  if (e.stopPropagation) {
+    e.stopPropagation(); // Останавливает распространение события
+  }
+
+  if (dragSrcEl !== this) {
+    // Обмен содержимым между перетаскиваемым и целевым элементами
+    dragSrcEl.innerHTML = this.innerHTML;
+    this.innerHTML = e.dataTransfer.getData('text/html');
+  }
+
+  return false;
+}
+
+function handleDragEnd(e) {
+  // Обновление стилей или выполнение других действий после завершения перетаскивания
+  this.style.backgroundColor = ''; // Возвращаем исходный цвет фона
+}

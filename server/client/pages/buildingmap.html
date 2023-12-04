@@ -29,9 +29,10 @@
             <h2 class="nameOfBuildings"></h2>
         </div>
         
-        <div  class="buildings">
+        <div  class="buildings" >
+            
             <div class="sidebar">
-                <div class="container">
+                <div class="container drag" draggable="true">
                     <h4>Выберите этаж</h4>
                     <p>
                         <select id="buildingFloors" onchange="changeFloor(this);">
@@ -40,7 +41,8 @@
                         </select>
                     </p>
                 </div>
-                <div class="container">
+                
+                <div class="container drag" draggable="true">
                     <h4>Назначение команты</h4>
                     <p>
                         <select id="PurposeOfRoom" onchange="showDom(this);">
@@ -49,7 +51,7 @@
                     </p>  
                     <p class = "PurposeOfRoomtxt"></p>
                 </div>
-                <div class="container">
+                <div class="container drag" draggable="true">
                     <h4>Вид комнаты</h4>
                     <p>
                         <select id="TypeOfRoom" onchange="showDom(this);">
@@ -58,7 +60,7 @@
                     </p>  
                     <p class = "TypeOfRoomtxt"></p>
                 </div>
-                <div class="container">
+                <div class="container drag" draggable="true">
                     <h4>Классификация в соответствии с отчетностью по ВПО, СПО</h4>
                     <p>
                         <select id="ClassifReporting" onchange="showDom(this);">
@@ -67,7 +69,7 @@
                     </p>  
                     <p class = "ClassifReportingtxt"></p>
                 </div>
-                <div class="container">
+                <div class="container drag" draggable="true">
                     <h4>Классификация в соответствии с хоз. деятельностью</h4>
                     <p>
                         <select id="ClassifEconActiv" onchange="showDom(this);">
