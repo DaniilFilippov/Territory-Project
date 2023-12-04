@@ -25,6 +25,8 @@ let amountOfDom = '';
 let lastDom = '';
 let amountOfEcAcElem= '';
 let currentRequest = null;
+let popupTimeout;
+
 fetchFloors(buildingId);
 
 fetch('/api/buildings/' + buildingId)
@@ -47,7 +49,6 @@ console.log(domenDictionary.EnonActiv);
 // Заполнение select'ов значениями
 for (let key in domenDictionary) {
   if (domenDictionary.hasOwnProperty(key)) {
-      console.log(key + ": " + domenDictionary[key]);
       fetch('/api/floors/info/domen/' + domenDictionary[key])
       .then(response => response.json()).then(data => {
         data.forEach(element => {
@@ -60,6 +61,10 @@ for (let key in domenDictionary) {
       });
     });
   }
+}
+
+function getIns (activeFloor) {
+
 }
 
 
@@ -115,6 +120,10 @@ function showDom(sender) {
             case 'TypeOfRoom':
               svgElement.classList.add('animated-svg');
               animateSvg(svgElement, '#fb00ff');
+              break;
+            case 'CODE':
+              svgElement.classList.add('animated-svg');
+              animateSvg(svgElement, activeRoomsInfo[i].STR_VALUE);
               break;
             default:
               svgElement.style.fill = '#000000';
@@ -189,6 +198,9 @@ async function changeFloor(sender) {
   let str = sender.value;
   let parts = str.split('/');
   activeFloor = parts[0].trim() + ' ' + parts[1].trim();
+  
+
+
 
   document.getElementById('ClassifReporting').value = 'default';
   document.getElementById('ClassifEconActiv').value = 'default';
@@ -208,10 +220,12 @@ async function changeFloor(sender) {
     svgMapDisplay.innerHTML = '';
     data.forEach(element => {
         svgMapDisplay.insertAdjacentHTML('beforeend', element.SVGMAP);
+
     });
 
 
     activeRoomsInfo = await fullInfo(activeFloor);
+
     SVGElements = document.querySelectorAll("path, polygon, polyline");
 
     SVGElements.forEach(async (svgElement) => {
@@ -229,11 +243,37 @@ async function changeFloor(sender) {
         if(svgElement.id == id){
           svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
         }
+
+        // Пример использования
+        let selectElement = document.getElementById('CODE'); // Замените на ID вашего элемента select
+        let valueToCheck = activeRoomsInfo[i].CODE; // Замените на значение, которое нужно проверить
+        let valueName = activeRoomsInfo[i].NAME; // Замените на значение, которое нужно проверить
+     
+        if (containsOption(selectElement, valueToCheck) == false) {
+          var el = document.createElement("option");
+         
+          if(valueToCheck == 'РУТ (МИИТ)')
+          {
+            el.textContent =  valueToCheck;
+          } else {
+            el.textContent =  valueName;
+          }
+          
+          el.value = valueToCheck;
+          selectElement.appendChild(el);
+
+        
+        } 
       }
     });
   } catch (error) {
     console.error('Ошибка при получении данных:', error);
   }
+}
+
+//Проверка на содержание элементов в списке
+function containsOption(selectElement, valueToCheck) {
+  return Array.from(selectElement.options).some(option => option.value === valueToCheck);
 }
 
 function fetchData(activeFloor, id) {
@@ -251,12 +291,17 @@ function fetchData(activeFloor, id) {
     .then(data => {
       popupOnMap.innerHTML = ''; // Очищаем предыдущее содержимое
       data.forEach(function(item) {
-        let head = document.createElement('h3');
+        let head = document.createElement('h4');
+        head.style.margin = '5px';
+        let content = document.createElement('p');
         let room = item.namesOfRoom;
-        head.textContent = room;
-        console.log(room);
+        head.textContent = `Номер комнты: ${id}`;
+        content.textContent =room;
+        content.style.textAlign = 'center';
+        content.style.margin = '0px';
         popupOnMap.id = room;
         popupOnMap.appendChild(head);
+        popupOnMap.appendChild(content);
       });
     })
     .catch(error => {
@@ -268,29 +313,31 @@ function fetchData(activeFloor, id) {
     });
 }
 
-
-// Отображение всплывающего окна
 function showPopupOnMap(evt) {
-  popupOnMap.innerHTML = '';
-  fetchData(activeFloor, this.id);
+  clearTimeout(popupTimeout); // Очищаем предыдущий таймер, если он был установлен
+
+  popupTimeout = setTimeout(() => {
+    popupOnMap.innerHTML = '';
+    fetchData(activeFloor, this.id);
   
-  // Show popup
-  if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility')) {
-    // Calculate popup position
+    // Calculate popup position and show it
     const x = evt.clientX;
     const y = evt.clientY;
     popupOnMap.style.visibility = 'visible';
     popupOnMap.style.left = x + 20 + 'px';
     popupOnMap.style.top = window.scrollY + y - 60 + 'px';
-  }
+    
+    popupOnMap.style.background = convertRgbToRgba(this.style.fill, 0.4) 
+  }, 100); // Задержка в 50 миллисекунд
 }
-// Скрыть всплывающее окно
+
 function hidePopupOnMap(evt) {
+  clearTimeout(popupTimeout); // Очищаем таймер, чтобы предотвратить появление popup
+
   if (!popupOnMap.contains(evt.target)) {
     // Hide the popup
     popupOnMap.style.visibility = 'hidden';
     popupOnMap.innerHTML = '';
-    
   }
 }
 
@@ -303,11 +350,9 @@ function hidePopupOnMap(evt) {
     }
   });
 
-
   function showBuildings(sender) {
       roomsInfo(activeFloor, sender.id);
   }
-  
   
  // Выведение информации по комнате
   function roomsInfo(floor, room) {
@@ -338,7 +383,6 @@ function hidePopupOnMap(evt) {
                     {
                       entry[key] = 'РУТ (МИИТ)';
                     }
-                    console.log(key);
                     const row = document.createElement('tr');
                     
                  
@@ -427,50 +471,74 @@ async function fullInfo(floor, svgElement) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  const containers = document.querySelectorAll('.drag');
-
-  containers.forEach(container => {
-    container.addEventListener('dragstart', handleDragStart, false);
-    container.addEventListener('dragover', handleDragOver, false);
-    container.addEventListener('drop', handleDrop, false);
-    container.addEventListener('dragend', handleDragEnd, false);
-  });
+document.querySelectorAll('.drag').forEach(elem => {
+  elem.addEventListener('dragstart', handleDragStart, false);
+  elem.addEventListener('dragenter', handleDragEnter, false);
+  elem.addEventListener('dragover', handleDragOver, false);
+  elem.addEventListener('dragleave', handleDragLeave, false);
+  elem.addEventListener('drop', handleDrop, false);
+  elem.addEventListener('dragend', handleDragEnd, false);
 });
 
-let dragSrcEl = null;
-
 function handleDragStart(e) {
-  dragSrcEl = this;
+  e.target.style.opacity = '0.4';  // полупрозрачность
+  e.target.classList.add('dragging');
+
+  dragSrcEl = this; // Запоминаем элемент, который будет перемещаться
+
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', this.innerHTML);
-  this.style.backgroundColor = 'rgba(227, 230, 230, 0.8)';
 }
 
 function handleDragOver(e) {
   if (e.preventDefault) {
-    e.preventDefault(); // Необходимо для разрешения перетаскивания
+      e.preventDefault(); // Необходимо для разрешения перетаскивания
   }
-  e.dataTransfer.dropEffect = 'move';
+
+  e.dataTransfer.dropEffect = 'move';  // вид курсора
+
   return false;
+}
+
+function handleDragEnter(e) {
+  if (e.currentTarget === e.target) {
+      e.currentTarget.classList.add('drag-over');
+  }
+}
+
+function handleDragLeave(e) {
+  let relatedTarget = e.relatedTarget;
+  if (!e.currentTarget.contains(relatedTarget)) {
+      e.currentTarget.classList.remove('drag-over');
+  }
 }
 
 function handleDrop(e) {
   if (e.stopPropagation) {
-    e.stopPropagation(); // Останавливает распространение события
+      e.stopPropagation(); // Останавливает перенаправление в некоторых браузерах
   }
 
   if (dragSrcEl !== this) {
-    // Обмен содержимым между перетаскиваемым и целевым элементами
-    dragSrcEl.innerHTML = this.innerHTML;
-    this.innerHTML = e.dataTransfer.getData('text/html');
+      dragSrcEl.innerHTML = this.innerHTML;
+      this.innerHTML = e.dataTransfer.getData('text/html');
   }
+
+  e.currentTarget.classList.remove('drag-over');
 
   return false;
 }
 
 function handleDragEnd(e) {
-  // Обновление стилей или выполнение других действий после завершения перетаскивания
-  this.style.backgroundColor = ''; // Возвращаем исходный цвет фона
+  e.target.style.opacity = '1'; // Возвращаем непрозрачность
+  e.target.classList.remove('dragging');
+
+  document.querySelectorAll('.drag').forEach(elem => {
+      elem.classList.remove('drag-over');
+  });
+}
+
+
+function convertRgbToRgba(rgbString, alpha) {
+  // Заменяем 'rgb' на 'rgba' и добавляем альфа-канал
+  return rgbString.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
 }

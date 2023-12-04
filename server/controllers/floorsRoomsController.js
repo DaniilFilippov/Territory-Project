@@ -204,7 +204,7 @@ async function getInfoRoomsByFloor(req, res) {
           resID = resID + ' ' + parts[i].trim();
         }
         console.log('result' + resID);
-        const result = await dbOperations.executeSQL(`select fr.ID, fr.numbofplacement, fr.numbofroom, ins.code, val.str_value,
+        const result = await dbOperations.executeSQL(`select fr.ID, fr.numbofplacement, fr.numbofroom, ins.code, ins.name, val.str_value,
         (SELECT name 
           FROM DMSENUMVALUES  
           WHERE  prn = (select rn from DMSDOMAINS where code = 'ClassifReporting' ) 

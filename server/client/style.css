@@ -178,7 +178,7 @@ section {
     position: absolute;
     visibility: hidden;
     color:aliceblue;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.828);
     font-size:medium;
     font-weight: 500;
     box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.517);
@@ -572,24 +572,16 @@ select:disabled {
 
 /* ---------------------------------------------Стили для перетаскивания элементов------------------------------------------ */
 .drag {
-  /* Ваши стили */
-  border: 1px solid #ddd; /* Пример границы */
-  transition: transform 0.5s ease;
-}
-
-.drag:hover {
-  cursor: grab; /* Изменение курсора для индикации перетаскивания */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: grab;
 }
 
 .drag:active {
-  cursor: grabbing; /* Изменение курсора для индикации перетаскивания */
+  cursor: grabbing;
+  background-color: #ccc; /* Измените на желаемый цвет */
 }
 
-
-
-/* Стиль для изменения внешнего вида при перетаскивании */
-.dragging {
-  opacity: 0.6; /* Сделать элемент полупрозрачным */
-
-  transition: background-color 0.3s ease, opacity 0.3s ease;
+/* Дополнительные стили для анимации перемещения */
+.drag-over {
+  border: 3px dashed  #151848; /* Пример стиля для элемента, над которым находится перетаскиваемый объект */
 }
