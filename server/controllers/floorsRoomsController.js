@@ -99,7 +99,7 @@ async function getRoomsOfFloorsById(req, res) {
              AND value_num = r.typeofroom) as "Вид команты",
         (SELECT name 
              FROM udo_t_namesofrooms   
-             WHERE  rn = r.nameofroom) as "Наименование комнаты",
+             WHERE  rn = r.nameofroom) as "namesOfRoom",
         (SELECT name 
              FROM DMSENUMVALUES  
              WHERE  prn = (select rn from DMSDOMAINS where code = 'ClassifReporting' ) 

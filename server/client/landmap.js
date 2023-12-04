@@ -5,14 +5,14 @@ const urlParams = new URLSearchParams(queryString);
 const landId = urlParams.get('id');
 let popupOnMap = document.querySelector('.popupOnMap');
 const nameTitle = document.querySelector('.nameOfLand');
-const svgMapDisplay = document.querySelector('.svgMap');
+const svgMapDisplay = document.querySelector('.svgMapLand');
 document.title = "Земельный участок: " + landId;
 nameTitle.textContent = "Земельный участок - " + landId;
 
 // Add event listener to adjust SVG map size on browser zoom
 window.addEventListener('resize', function() {
   var svgMap = document.getElementById('svgMap1');
-  var svgMapContainer = document.getElementById('svgMap');
+  var svgMapContainer = document.getElementById('svgMapLand');
   var containerWidth = svgMapContainer.clientWidth/2;
   var containerHeight = svgMapContainer.clientHeight/2;
   svgMap.setAttribute('width', containerWidth);

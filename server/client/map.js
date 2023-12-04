@@ -7,21 +7,13 @@ let popupOnMap = document.querySelector('.popupOnMap');
 
 document.title = mapId;
 
-  // Add event listener to adjust SVG map size on browser zoom
-  window.addEventListener('resize', function() {
-    var svgMap = document.getElementById('svgMap1');
-    var svgMapContainer = document.getElementById('svgMap');
-    var containerWidth = svgMapContainer.clientWidth;
-    var containerHeight = svgMapContainer.clientHeight;
-    svgMap.setAttribute('width', containerWidth);
-    svgMap.setAttribute('height', containerHeight);
-  });
+
 
 fetch('../svgmaps/' + mapId + '.svg')
       .then(response => response.text())
       .then(svgData => {
         // Append the SVG data to the SVG element
-        const svgContainer = document.getElementById('svgMap');
+        const svgContainer = document.getElementById('svgMapCity');
         svgContainer.innerHTML = svgData;
         let marks = document.getElementsByClassName('mark');
         // Attach event listeners to svg map elements

@@ -13,6 +13,7 @@ let popupOnMap = document.querySelector('.popupOnMap');
 const nameTitle = document.querySelector('.nameOfBuildings');
 const svgMapDisplay = document.querySelector('.svgMap');
 const buildingsFloors = document.getElementById('buildingFloors');
+let tabContainer = document.querySelector('.tabContainer'); 
 let activeFloor = '';
 let tab = document.getElementById('tab-room');;
 let lastSvgEltm;
@@ -23,7 +24,7 @@ let amountOfVPOElem = '';
 let amountOfDom = '';
 let lastDom = '';
 let amountOfEcAcElem= '';
-
+let currentRequest = null;
 fetchFloors(buildingId);
 
 fetch('/api/buildings/' + buildingId)
@@ -71,6 +72,11 @@ function showDom(sender) {
   tab.style.display = 'none';
   svgColor = '';
   lastSvgEltm = '';
+
+
+  tabContainer.style.border = '1px solid rgba(179, 171, 171, 0)';
+  tabContainer.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.0)'; 
+  tabContainer.style.background = 'rgba(255, 255, 255, 0.0)'; 
 
   if (type === 'default') {
     SVGElements.forEach(async (svgElement) => {
@@ -188,6 +194,9 @@ async function changeFloor(sender) {
   document.getElementById('ClassifEconActiv').value = 'default';
   document.getElementById('PurposeOfRoom').value = 'default';
 
+  tabContainer.style.border = '1px solid rgba(179, 171, 171, 0)';
+  tabContainer.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0)'; 
+  tabContainer.style.background = 'rgba(255, 255, 255, 0)';
 
   try {
     const response = await fetch('/api/buildings/floors/' + activeFloor);
@@ -227,45 +236,54 @@ async function changeFloor(sender) {
   }
 }
 
-function fetchData (id) {
-  fetch('/api/lands/buildings/' + id)
- .then(response => response.json())
- .then(data => {
-   for (let i = 0; i < data.length; i++) {
-       //let link = document.createElement('a');
-       //link.href = `/territories?id=${data[i].ID}`; // Set the href based on the data from the database
-       //link.textContent = `- ${data[i].CODE}`;
-       let text = document.createElement('p');
-       text.textContent = `- ${data[i].CODE}`;
-       let elem = document.createElement('div');
-       elem.appendChild(text);
-       
-       // Append element to popupOnMap div before the first child
-       popupOnMap.appendChild(elem);
-     }
- });
+function fetchData(activeFloor, id) {
+  // Отменяем предыдущий запрос, если он существует
+  if (currentRequest) {
+    currentRequest.abort();
+  }
+
+  // Создаем новый контроллер AbortController для нового запроса
+  currentRequest = new AbortController();
+  const { signal } = currentRequest;
+
+  fetch(`/api/floors/rooms/${activeFloor}/${id}`, { signal })
+    .then(response => response.json())
+    .then(data => {
+      popupOnMap.innerHTML = ''; // Очищаем предыдущее содержимое
+      data.forEach(function(item) {
+        let head = document.createElement('h3');
+        let room = item.namesOfRoom;
+        head.textContent = room;
+        console.log(room);
+        popupOnMap.id = room;
+        popupOnMap.appendChild(head);
+      });
+    })
+    .catch(error => {
+      if (error.name === 'AbortError') {
+        console.log('Fetch aborted');
+      } else {
+        console.error('Ошибка при получении данных:', error);
+      }
+    });
 }
+
 
 // Отображение всплывающего окна
 function showPopupOnMap(evt) {
-    popupOnMap.innerHTML = '';
-    let head = document.createElement('h3');
-    head.textContent = this.id;
-    popupOnMap.id = this.id;
-    popupOnMap.appendChild(head);
-      
-    fetchData(this.id);
-    
-    // Show popup
-    if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility')) {
-      // Calculate popup position
-      const x = evt.clientX;
-      const y = evt.clientY;
-      popupOnMap.style.visibility = 'visible';
-      popupOnMap.style.left = x + 20 + 'px';
-      popupOnMap.style.top = window.scrollY + y - 60 + 'px';
-    }
+  popupOnMap.innerHTML = '';
+  fetchData(activeFloor, this.id);
+  
+  // Show popup
+  if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility')) {
+    // Calculate popup position
+    const x = evt.clientX;
+    const y = evt.clientY;
+    popupOnMap.style.visibility = 'visible';
+    popupOnMap.style.left = x + 20 + 'px';
+    popupOnMap.style.top = window.scrollY + y - 60 + 'px';
   }
+}
 // Скрыть всплывающее окно
 function hidePopupOnMap(evt) {
   if (!popupOnMap.contains(evt.target)) {
@@ -291,7 +309,7 @@ function hidePopupOnMap(evt) {
   }
   
   
- 
+ // Выведение информации по комнате
   function roomsInfo(floor, room) {
     if (lastSvgEltm)
     {
@@ -301,11 +319,12 @@ function hidePopupOnMap(evt) {
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('data-container');
-            let tabContainer = document.querySelector('.tabContainer'); 
+
             container.innerHTML = ''; // Очищаем контейнер перед добавлением новых данных
 
             tabContainer.style.border = '1px solid rgba(179, 171, 171, 0.553)';
             tabContainer.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.2)'; 
+            tabContainer.style.background = 'rgba(255, 255, 255, 0.50)';        
 
               
             //Отображение таблицы с характеристиками комнаты
@@ -319,11 +338,28 @@ function hidePopupOnMap(evt) {
                     {
                       entry[key] = 'РУТ (МИИТ)';
                     }
+                    console.log(key);
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${key}</td>
-                        <td>${entry[key]}</td>
-                    `;
+                    
+                 
+                    switch (key) 
+                    {
+                        case 'namesOfRoom':
+                          row.innerHTML = `
+                          <td>Наименование комнаты</td>
+                          <td>${entry[key]}</td>
+                        `;
+                        break;
+                    default: 
+                      if (key != 'CODE')
+                      {
+                    
+                        row.innerHTML = `
+                            <td>${key}</td>
+                            <td>${entry[key]}</td>
+                        `;
+                      }  
+                    }
                     container.appendChild(row);
                 });
             });

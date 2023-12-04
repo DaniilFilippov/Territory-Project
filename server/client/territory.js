@@ -3,7 +3,7 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const territoryId = urlParams.get('id');
-const svgMapDisplay = document.querySelector('.svgMap');
+const svgMapDisplay = document.querySelector('.svgMapTer');
 const nameTitle = document.querySelector('.NameOfTerritory');
 let popupOnMap = document.querySelector('.popupOnMap');
 
