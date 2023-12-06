@@ -7,7 +7,7 @@ let popupOnMap = document.querySelector('.popupOnMap');
 
 document.title = "Территория: " + territoryId;
 nameTitle.textContent = "Территория - " + territoryId;
-
+let popupTimeout;
 
 fetch('/api/territories/' + territoryId)
 .then(response => response.json()).then(data => {
@@ -23,7 +23,8 @@ fetch('/api/territories/' + territoryId)
     for (let i = 0; i < SVGPATH.length; i++) {
         SVGPATH[i].classList.add("mark");
         SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
-        SVGPATH[i].addEventListener('dblclick', showLandMapEvt);
+        SVGPATH[i].addEventListener('mouseout', hidePopupOnMap);
+        SVGPATH[i].addEventListener('click', showLandMapEvt);
       }
 });
 
@@ -52,23 +53,25 @@ function fetchData (id) {
 
 // Display popup window
 function showPopupOnMap(evt) {
-    popupOnMap.innerHTML = '';
-    let head = document.createElement('h3');
-    head.textContent = this.id;
-    popupOnMap.id = this.id;
-    popupOnMap.appendChild(head);
+    clearTimeout(popupTimeout); // Очищаем предыдущий таймер, если он был установлен
+    popupTimeout = setTimeout(() => {
+      popupOnMap.innerHTML = '';
+      let head = document.createElement('h3');
+      head.textContent = this.id;
+      popupOnMap.id = this.id;
+      popupOnMap.appendChild(head);
+        
+      //fetchData(this.id);
+   
+        // Calculate popup position
+        const x = evt.clientX;
+        const y = evt.clientY;
+        popupOnMap.style.visibility = 'visible';
+        popupOnMap.style.left = x + 20 + 'px';
+        popupOnMap.style.top = window.scrollY + y - 60 + 'px';
       
-    //fetchData(this.id);
-  
-    // Show popup
-    if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility')) {
-      // Calculate popup position
-      const x = evt.clientX;
-      const y = evt.clientY;
-      popupOnMap.style.visibility = 'visible';
-      popupOnMap.style.left = x + 20 + 'px';
-      popupOnMap.style.top = window.scrollY + y - 60 + 'px';
-    }
+      popupOnMap.style.background = convertRgbToRgba(this.style.fill, 0.4) 
+    }, 100); // Задержка в 50 миллисекунд
   }
 
 
@@ -96,10 +99,15 @@ function showPopupOnMap(evt) {
 
 
   function hidePopupOnMap(evt) {
+    clearTimeout(popupTimeout); // Очищаем таймер, чтобы предотвратить появление popup
     if (!popupOnMap.contains(evt.target)) {
-      // Hide the popup
-      popupOnMap.style.visibility = 'hidden';
-      popupOnMap.innerHTML = '';
-      console.log('Triggered');
+       // Hide the popup
+       popupOnMap.style.visibility = 'hidden';
+       popupOnMap.innerHTML = '';
     }
+  }
+
+  function convertRgbToRgba(rgbString, alpha) {
+    // Заменяем 'rgb' на 'rgba' и добавляем альфа-канал
+    return rgbString.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
   }

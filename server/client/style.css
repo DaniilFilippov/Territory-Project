@@ -75,10 +75,6 @@ section {
   object-fit: cover;
 }
 
-#globalMap {
-
-}
-
 .menu-btn {
   background: url(iconmenu.png)no-repeat;
   background-size: 30px;
@@ -111,11 +107,11 @@ section {
   }
   
 
-
   .svgMapTer, .svgMapLand{
     width: 75%;
     margin-left: auto;
     margin-right: auto;
+    padding: 15px;
 
   }
 
@@ -124,7 +120,7 @@ section {
     width: 75%;
     margin-left: auto;
     margin-right: auto;
-    padding: 0px 20px;
+    padding: 15px;
   }
 
   .terries-tittle {
@@ -146,6 +142,7 @@ section {
       fill: rgba(254,165,0,0.4); /*Цвет заливки #ffdba4*/
       cursor: pointer;           /*Курсор-указатель*/
       /*opacity: 0.5;*/          /*Прозрачность*/
+      fill-opacity: 0.5;
   }
   
   /* Цвета полигонов при наведении мышкой*/
@@ -162,10 +159,6 @@ section {
       fill: rgb(255, 0, 0) !important;     /*Цвет заливки #ff8c0b #ffc70b #ff9c1b*/	
       /*opacity: 0.5;*/               /*Прозрачность*/
   }
-  
-  
-  
-
 
   #mypopup, #mypopup1, .popupOnMap {
     width: auto;
@@ -432,11 +425,21 @@ table tr:last-child td:last-child {
 }
 
 
-.nameOfBuildings, .NameOfTerritory, .nameOfLand{
+.nameOfBuildings, .NameOfTerritory, .nameOfLand, .nameOfMap{
 
   flex-wrap: wrap;
   width: 80%;
   margin: auto; /* Автоматический отступ для центрирования */
+  line-height: normal;
+  text-align: center; /* Центрирование текста внутри h2 */
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.titleOfLists {
+  flex-wrap: wrap;
+  margin-left: auto; 
+  margin-right: auto;
   line-height: normal;
   text-align: center; /* Центрирование текста внутри h2 */
   padding-bottom: 10px;
@@ -459,13 +462,19 @@ table tr:last-child td:last-child {
   padding: 10px;
 }
 
- .container, .svgContainer {
+ .container, .svgContainer, .svgContainerTL {
+
   background: rgba(255, 255, 255, 0.379);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(4.8px);
   -webkit-backdrop-filter: blur(4.8px);
   border: 1px solid rgba(179, 171, 171, 0.553);
+}
+
+.svgContainerTL {
+  padding: 15px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
 }
 
 .tabContainer {
@@ -584,4 +593,60 @@ select:disabled {
 /* Дополнительные стили для анимации перемещения */
 .drag-over {
   border: 3px dashed  #151848; /* Пример стиля для элемента, над которым находится перетаскиваемый объект */
+}
+
+
+
+/* ---------------------------------------------Стили для блочного отображения списков------------------------------------------ */
+.element-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Колонки будут иметь минимальную ширину 200px и максимальную - 1fr */
+  gap: 10px; /* Расстояние между элементами */
+}
+
+
+.element-item {
+  min-height: 150px;
+  text-align: center;
+
+  margin: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc; /* Пример границы */
+  text-align: center;
+  transition: transform 0.3s ease; /* Плавный переход эффекта */
+}
+
+
+.element-item:hover {
+  transform: scale(1.05); /* Увеличение размера при наведении */
+}
+
+
+.map-container {
+  display: flex;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center; /* Центрирование по вертикали */
+  flex-grow: 1;
+  margin: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.379);
+  border-radius: 16px;
+  backdrop-filter: blur(4.8px);
+  -webkit-backdrop-filter: blur(4.8px);
+  border: 1px solid rgba(179, 171, 171, 0.553);
+}
+
+
+
+.element-item h4 {
+
+  margin: 5px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 600px) {
+  .element-item {
+      flex-basis: 100%; /* На маленьких экранах элементы займут всю ширину */
+  }
 }

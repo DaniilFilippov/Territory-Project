@@ -2,7 +2,8 @@ const domenDictionary = {
   "EnonActiv": "ClassifEconActiv",
   "VPOSPO": "ClassifReporting",
   "PurposeOfRoom": "PurposeOfRoom",
-  "TypeOfRoom":"TypeOfRoom"
+  "TypeOfRoom":"TypeOfRoom",
+  "CODE":"CODE"
 };
 
 
@@ -63,10 +64,6 @@ for (let key in domenDictionary) {
   }
 }
 
-function getIns (activeFloor) {
-
-}
-
 
 //Отображение комнат по характеристикам(домен)
 function showDom(sender) {
@@ -100,8 +97,8 @@ function showDom(sender) {
       for(let i = 0; i < activeRoomsInfo.length; i++) {
         
         let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
-  
-        if(svgElement.id == id && activeRoomsInfo[i][sender.id] == type){
+        id = replEngLetWithRus(id);
+        if(replEngLetWithRus(svgElement.id) == id && activeRoomsInfo[i][sender.id] == type){
           
           switch (sender.id) {
             case 'ClassifReporting':
@@ -197,14 +194,23 @@ async function changeFloor(sender) {
   
   let str = sender.value;
   let parts = str.split('/');
+  let selectElement = document.getElementById('CODE');
   activeFloor = parts[0].trim() + ' ' + parts[1].trim();
   
+  selectElement.innerHTML = '';
+
+  let el = document.createElement("option");
+  el.textContent =  'Выберите подразделение';
+  el.value = 'default';
+  el.selected = true;
+  selectElement.appendChild(el);
 
 
 
   document.getElementById('ClassifReporting').value = 'default';
   document.getElementById('ClassifEconActiv').value = 'default';
   document.getElementById('PurposeOfRoom').value = 'default';
+  document.getElementById('CODE').value = 'default';
 
   tabContainer.style.border = '1px solid rgba(179, 171, 171, 0)';
   tabContainer.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0)'; 
@@ -226,7 +232,7 @@ async function changeFloor(sender) {
 
     activeRoomsInfo = await fullInfo(activeFloor);
 
-    SVGElements = document.querySelectorAll("path, polygon, polyline");
+    SVGElements = document.querySelectorAll("path, polygon, polyline, rect");
 
     SVGElements.forEach(async (svgElement) => {
       svgElement.classList.add('animated-fill');
@@ -240,17 +246,20 @@ async function changeFloor(sender) {
         
         let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
 
-        if(svgElement.id == id){
+        id = replEngLetWithRus(id);
+        
+        if(replEngLetWithRus(svgElement.id) == id){
           svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
+          // Удаляем существующий атрибут, если он есть
+          svgElement.style.opacity = '1';
         }
 
-        // Пример использования
-        let selectElement = document.getElementById('CODE'); // Замените на ID вашего элемента select
-        let valueToCheck = activeRoomsInfo[i].CODE; // Замените на значение, которое нужно проверить
-        let valueName = activeRoomsInfo[i].NAME; // Замените на значение, которое нужно проверить
-     
+       
+        let valueToCheck = activeRoomsInfo[i].CODE; 
+        let valueName = activeRoomsInfo[i].NAME; 
+        
         if (containsOption(selectElement, valueToCheck) == false) {
-          var el = document.createElement("option");
+          let el = document.createElement("option");
          
           if(valueToCheck == 'РУТ (МИИТ)')
           {
@@ -262,7 +271,6 @@ async function changeFloor(sender) {
           el.value = valueToCheck;
           selectElement.appendChild(el);
 
-        
         } 
       }
     });
@@ -282,11 +290,13 @@ function fetchData(activeFloor, id) {
     currentRequest.abort();
   }
 
+  let fixId = replEngLetWithRus(id);
+
   // Создаем новый контроллер AbortController для нового запроса
   currentRequest = new AbortController();
   const { signal } = currentRequest;
 
-  fetch(`/api/floors/rooms/${activeFloor}/${id}`, { signal })
+  fetch(`/api/floors/rooms/${activeFloor}/${fixId}`, { signal })
     .then(response => response.json())
     .then(data => {
       popupOnMap.innerHTML = ''; // Очищаем предыдущее содержимое
@@ -295,8 +305,9 @@ function fetchData(activeFloor, id) {
         head.style.margin = '5px';
         let content = document.createElement('p');
         let room = item.namesOfRoom;
-        head.textContent = `Номер комнты: ${id}`;
-        content.textContent =room;
+        let roomid = item.Идентификатор;
+        head.textContent = `Номер комнты: ${roomid} (${fixId})`;
+        content.textContent =`${room}`;
         content.style.textAlign = 'center';
         content.style.margin = '0px';
         popupOnMap.id = room;
@@ -350,17 +361,37 @@ function hidePopupOnMap(evt) {
     }
   });
 
-  function showBuildings(sender) {
-      roomsInfo(activeFloor, sender.id);
+  function showBuildings(sender) {  
+    roomsInfo(activeFloor, sender.id);
+  
   }
   
+  function replEngLetWithRus(str) {
+    const replacements = {
+      'A': 'А', 'a': 'а', 'B': 'Б', 'b': 'б', 
+      'V': 'В', 'v': 'в', 'C': 'С', 'c': 'с', 
+      'D': 'Д', 'd': 'д', 'G': 'Г', 'g': 'г', 
+      'M': 'М', 'm': 'м'
+    };
+  
+    const parts = str.split('r');
+    if (parts.length > 1) {
+      parts[1] = parts[1].split('').map(char => replacements[char] || char).join('');
+    }
+    return parts.join('r');
+  }
+
  // Выведение информации по комнате
   function roomsInfo(floor, room) {
     if (lastSvgEltm)
     {
       lastSvgEltm.style.fill = svgColor;
     }
-    fetch(`/api/floors/rooms/${floor}/${room}`)
+
+    let fixId = replEngLetWithRus(room);
+    console.log(fixId);
+
+    fetch(`/api/floors/rooms/${floor}/${fixId}`)
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('data-container');

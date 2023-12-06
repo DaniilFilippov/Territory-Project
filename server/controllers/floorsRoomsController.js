@@ -195,45 +195,54 @@ async function getColorOfInsDepart(req, res) {
 // Извлечение номер комнаты, цвет, подразделение в одном запрсое
 async function getInfoRoomsByFloor(req, res) {
   try {
-        const id = req.params.floorId; 
+    const id = req.params.floorId; 
 
-        let str = id;
-        let parts = str.split(' ');
-        let resID = parts[0].trim() + ' /';
-        for (let i = 1; i < parts.length; i++) {
-          resID = resID + ' ' + parts[i].trim();
-        }
-        console.log('result' + resID);
-        const result = await dbOperations.executeSQL(`select fr.ID, fr.numbofplacement, fr.numbofroom, ins.code, ins.name, val.str_value,
-        (SELECT name 
-          FROM DMSENUMVALUES  
-          WHERE  prn = (select rn from DMSDOMAINS where code = 'ClassifReporting' ) 
-          AND value_num = fr.CLASSIFREPORTINGVPOSPO) as "ClassifReporting",
-        (SELECT name 
-          FROM DMSENUMVALUES  
-          WHERE  prn = (select rn from DMSDOMAINS where code = 'ClassifEconActiv' ) 
-          AND value_num = fr.CLASSIFECONACTIVITY) as "ClassifEconActiv",
-        (SELECT name 
-          FROM DMSENUMVALUES  
-          WHERE  prn = (select rn from DMSDOMAINS where code = 'PurposeOfRoom' ) 
-          AND value_num = fr.purposeofroom) as "PurposeOfRoom",
-        (SELECT name 
-          FROM DMSENUMVALUES  
-          WHERE  prn = (select rn from DMSDOMAINS where code = 'TypeOfRoom' ) 
-          AND value_num = fr.typeofroom) as "TypeOfRoom"                  
-        from fd_t_list_of_rooms fr
-        left join fd_t_divisions_room div on fr.rn = div.prn 
-        left join ins_department ins on div.ins_departmentrn = ins.rn
-        left join DOCS_PROPS_VALS val on ins.rn = val.unit_rn
-          where val.unitcode = 'INS_DEPARTMENT'
-          and fr.prn = (select ff.rn from fd_t_list_of_floors ff  where ff.ID = :resID)
-          and val.str_value LIKE '#%'`, {resID});
-      res.status(200).json(result);
-
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+    let str = id;
+    let parts = str.split(' ');
+    let resID = parts[0].trim() + ' /';
+    for (let i = 1; i < parts.length; i++) {
+      resID = resID + ' ' + parts[i].trim();
     }
-} 
+    console.log('result' + resID);
+
+    const result = await dbOperations.executeSQL(`
+      SELECT 
+        fr.ID, 
+        fr.numbofplacement, 
+        fr.numbofroom, 
+        ins.code, 
+        ins.name, 
+        val.str_value,
+        (SELECT name 
+          FROM DMSENUMVALUES  
+          WHERE prn = (SELECT rn FROM DMSDOMAINS WHERE code = 'ClassifReporting') 
+          AND value_num = fr.CLASSIFREPORTINGVPOSPO) AS "ClassifReporting",
+        (SELECT name 
+          FROM DMSENUMVALUES  
+          WHERE prn = (SELECT rn FROM DMSDOMAINS WHERE code = 'ClassifEconActiv') 
+          AND value_num = fr.CLASSIFECONACTIVITY) AS "ClassifEconActiv",
+        (SELECT name 
+          FROM DMSENUMVALUES  
+          WHERE prn = (SELECT rn FROM DMSDOMAINS WHERE code = 'PurposeOfRoom') 
+          AND value_num = fr.purposeofroom) AS "PurposeOfRoom",
+        (SELECT name 
+          FROM DMSENUMVALUES  
+          WHERE prn = (SELECT rn FROM DMSDOMAINS WHERE code = 'TypeOfRoom') 
+          AND value_num = fr.typeofroom) AS "TypeOfRoom"                  
+      FROM fd_t_list_of_rooms fr
+      LEFT JOIN fd_t_divisions_room div ON fr.rn = div.prn 
+      LEFT JOIN ins_department ins ON div.ins_departmentrn = ins.rn
+      LEFT JOIN DOCS_PROPS_VALS val ON ins.rn = val.unit_rn AND val.unitcode = 'INS_DEPARTMENT' AND (val.str_value LIKE '#%' OR val.str_value IS NULL)
+      WHERE fr.prn = (SELECT ff.rn FROM fd_t_list_of_floors ff WHERE ff.ID = :resID)
+    `, { resID });
+
+    res.status(200).json(result);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 //PurposeOfRoom
 // Извлечение типов из домена паруса
 async function getNamesOfDomen(req, res) {

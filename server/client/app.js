@@ -6,6 +6,7 @@ let tableNames = {
 };
 const terrDisplay = document.querySelector('#globalMap');
 
+
 let popupOnMap = document.querySelector('.popupOnMap');
 
 fetch('../svgmaps/Россия.svg')
@@ -20,8 +21,8 @@ fetch('../svgmaps/Россия.svg')
         // Attach event listeners to svg map elements
         for (let i = 0; i < icons.length; i++) {
           icons[i].addEventListener('mouseover', showPopupOnMap);
-         // icons[i].addEventListener('click', showPopupOnMap);
-          icons[i].addEventListener('dblclick', showMapEvt);
+          icons[i].addEventListener('mouseout', hidePopupOnMap);
+          icons[i].addEventListener('click', showMapEvt);
         }
       })
       .catch(err => {
@@ -48,7 +49,7 @@ function fetchData() {
     });
 }
 
-fetchData();
+
       
 
 
@@ -61,9 +62,6 @@ function showPopupOnMap(evt) {
   popupOnMap.id = this.id;
   popupOnMap.appendChild(head);
    
-  //fetchData();
- 
-  console.log(this.id);
 
   // Show popup
   if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility')) {
@@ -141,6 +139,3 @@ function showInfo(sender) {
 }
 
 /////////////////////////////////////////////
-document.querySelector('.menu-toggle').addEventListener('click', function() {
-  document.querySelector('.nav-links').classList.toggle('active');
-});

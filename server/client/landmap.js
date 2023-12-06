@@ -8,7 +8,7 @@ const nameTitle = document.querySelector('.nameOfLand');
 const svgMapDisplay = document.querySelector('.svgMapLand');
 document.title = "Земельный участок: " + landId;
 nameTitle.textContent = "Земельный участок - " + landId;
-
+let popupTimeout;
 // Add event listener to adjust SVG map size on browser zoom
 window.addEventListener('resize', function() {
   var svgMap = document.getElementById('svgMap1');
@@ -34,7 +34,8 @@ fetch('/api/lands/' + landId)
     for (let i = 0; i < SVGPATH.length; i++) {
         SVGPATH[i].classList.add("mark");
         SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
-        SVGPATH[i].addEventListener('dblclick', showLandMapEvt);
+        SVGPATH[i].addEventListener('mouseout', hidePopupOnMap);
+        SVGPATH[i].addEventListener('click', showLandMapEvt);
       }
 });
 
@@ -44,7 +45,6 @@ function fetchData (id) {
   fetch('/api/territories/lands/' + id)
  .then(response => response.json())
  .then(data => {
-   console.log(data)
 
    for (let i = 0; i < data.length; i++) {
        //let link = document.createElement('a');
@@ -63,6 +63,9 @@ function fetchData (id) {
 
 // Display popup window
 function showPopupOnMap(evt) {
+  clearTimeout(popupTimeout); // Очищаем предыдущий таймер, если он был установлен
+  popupTimeout = setTimeout(() => {
+    
     popupOnMap.innerHTML = '';
     let head = document.createElement('h3');
     
@@ -71,7 +74,6 @@ function showPopupOnMap(evt) {
         data.forEach(element => {
 
             head.textContent = element.NOTE;
-            console.log(element.NOTE);
             
         });
         
@@ -80,47 +82,48 @@ function showPopupOnMap(evt) {
     popupOnMap.appendChild(head);
       
     fetchData(this.id);
-    
-    console.log(this.id);
   
     // Show popup
-    if (window.getComputedStyle(popupOnMap, null).getPropertyValue('visibility')) {
+  
       // Calculate popup position
       const x = evt.clientX;
       const y = evt.clientY;
       popupOnMap.style.visibility = 'visible';
       popupOnMap.style.left = x + 20 + 'px';
       popupOnMap.style.top = window.scrollY + y - 60 + 'px';
-    }
-  }
+    popupOnMap.style.background = convertRgbToRgba(this.style.fill, 0.4) 
+  }, 100); // Задержка в 50 миллисекунд
+}
 
   document.addEventListener('click', function(event) {
     // Check if the clicked element is the target element or its descendant
     if (!event.target.matches('.mark')) {
       // target element is clicked
-      console.log(123);
       hidePopupOnMap(event);
     }
   });
 
   function showBuildings(sender) {
   
-    console.log("Show " + sender.id);
     window.location.href = `/buildings?id=${sender.id}`
   }
   
   function showLandMapEvt(evt) {
     
-    console.log("Show " + evt.target.id);
     window.location.href = `/buildings?id=${evt.target.id}`
   }
 
 
   function hidePopupOnMap(evt) {
+    clearTimeout(popupTimeout); // Очищаем таймер, чтобы предотвратить появление popup
     if (!popupOnMap.contains(evt.target)) {
-      // Hide the popup
-      popupOnMap.style.visibility = 'hidden';
-      popupOnMap.innerHTML = '';
-      console.log('Triggered');
+       // Hide the popup
+       popupOnMap.style.visibility = 'hidden';
+       popupOnMap.innerHTML = '';
     }
+  }
+
+  function convertRgbToRgba(rgbString, alpha) {
+    // Заменяем 'rgb' на 'rgba' и добавляем альфа-канал
+    return rgbString.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
   }

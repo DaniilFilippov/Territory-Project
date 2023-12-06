@@ -2,11 +2,10 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const mapId = urlParams.get('id');
 
-
 let popupOnMap = document.querySelector('.popupOnMap');
-
+const nameTitle = document.querySelector('.nameOfMap');
 document.title = mapId;
-
+nameTitle.textContent = mapId;
 
 
 fetch('../svgmaps/' + mapId + '.svg')
@@ -16,12 +15,21 @@ fetch('../svgmaps/' + mapId + '.svg')
         const svgContainer = document.getElementById('svgMapCity');
         svgContainer.innerHTML = svgData;
         let marks = document.getElementsByClassName('mark');
-        // Attach event listeners to svg map elements
-        for (let i = 0; i < marks.length; i++) {
-            marks[i].addEventListener('mouseover', showPopupOnMap);
-            marks[i].addEventListener('dblclick', showLandMapEvt);
-}
-      })
+
+        SVGElements = document.querySelectorAll("path, polygon, polyline, rect");
+
+        SVGElements = document.querySelectorAll("path, polygon, polyline, rect");
+
+        SVGElements.forEach(async (svgElement) => {
+          svgElement.classList.add('animated-fill');
+          svgElement.classList.add("mark");
+          svgElement.addEventListener('mouseover', showPopupOnMap);
+          svgElement.addEventListener('mouseout', hidePopupOnMap);
+          svgElement.addEventListener('click', showLandMapEvt);
+          svgElement.style.opacity = '1';
+        });
+
+    })
       .catch(err => {
         console.error('Error fetching SVG file:', err);
 
@@ -85,6 +93,7 @@ function showPopupOnMap(evt) {
     console.log("Show " + sender.id);
 
     window.location.href = `/territories?id=${sender.id}`
+    console.log(sender.id + '123213');
   }
   
   function showLandMapEvt(evt) {
