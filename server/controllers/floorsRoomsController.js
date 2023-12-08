@@ -65,22 +65,21 @@ async function getRoomsOfFloorsById(req, res) {
       for (let i = 1; i < parts.length; i++) {
         resID = resID + ' ' + parts[i].trim();
       }
-
+ 
       let parts1 = roomId.split('-');
       let resroomId2, resroomId1;
 
 
       if (parts1[1] === undefined) {
          resroomId2 = parts1[0].replace('r', ''); // "42"; // "r42"
-         resroomId1 = null;
+         resroomId1 = '';
       }
       else       {
          resroomId1 = parts1[0]; // "I"
          resroomId2 = parts1[1].replace('r', ''); // "42"; // "r42"
       }
 
-      console.log( resroomId1);
-      console.log(resroomId2);
+      console.log( resroomId1 + ' ---' + resroomId2);
 
      //resID = parts[0].trim() + ' / ' + parts[1].trim() + ' ' + parts[2].trim();
 
@@ -119,7 +118,10 @@ async function getRoomsOfFloorsById(req, res) {
           where rn = (select INS_DEPARTMENTRN from FD_T_DIVISIONS_ROOM where prn = r.rn and (DATETO is null or DATETO > (select SYSDATE from dual)))) as "CODE"
         FROM fd_t_list_of_rooms r
         WHERE prn = (select rn from fd_t_list_of_floors where ID = :resID) 
-        and r.numbofplacement = :resroomId1
+        and (
+          r.numbofplacement = :resroomId1 OR 
+          (:resroomId1 IS NULL AND r.numbofplacement IS NULL)
+      )
         and r.NUMBOFROOM =:resroomId2`,
          {resID, resroomId1, resroomId2});
       res.status(200).json(result);

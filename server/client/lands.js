@@ -5,10 +5,10 @@ let currentPage = 0;
 
 
 
-fetch('/api/territories')
+fetch('/api/lands')
 .then(response => response.json()).then(data => {
     data.forEach(element => {
-        const name = element.NAME;
+        const name = element.ID;
         const SVGMAP = element.SVGMAP;
 
         createAndAddElement(name, SVGMAP);
@@ -77,6 +77,7 @@ function createPagination() {
 
 
   function showLandMapEvt(evt) {
-    window.location.href = `/territories?id=${evt.currentTarget .id}`
+    window.location.href = `/lands?id=${evt.currentTarget .id}`
+
   }
 

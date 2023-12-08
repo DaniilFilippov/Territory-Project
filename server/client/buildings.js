@@ -79,48 +79,68 @@ function showDom(sender) {
   tabContainer.style.border = '1px solid rgba(179, 171, 171, 0)';
   tabContainer.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.0)'; 
   tabContainer.style.background = 'rgba(255, 255, 255, 0.0)'; 
-
+  //Если значение селекта дефолтное
   if (type === 'default') {
     SVGElements.forEach(async (svgElement) => {
       for(let i = 0; i < activeRoomsInfo.length; i++) {
         
-        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
-        if(svgElement.id === id){
+        let id = '';
+      if (activeRoomsInfo[i].NUMBOFPLACEMENT === null) {
+          id = `r${activeRoomsInfo[i].NUMBOFROOM}`;
+       }
+      else {
+          id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
+       }
+
+        if(replEngLetWithRus(svgElement.id) == id){
           svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
         }
       }
+      
     });
   }
   else {
     SVGElements.forEach(async (svgElement) => {
-  
+      let id = '';
       for(let i = 0; i < activeRoomsInfo.length; i++) {
         
-        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
+
+        if (activeRoomsInfo[i].NUMBOFPLACEMENT === null) {
+           id = `r${activeRoomsInfo[i].NUMBOFROOM}`;
+        }
+        else {
+           id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
+        }
+
         id = replEngLetWithRus(id);
         if(replEngLetWithRus(svgElement.id) == id && activeRoomsInfo[i][sender.id] == type){
           
           switch (sender.id) {
             case 'ClassifReporting':
               svgElement.classList.add('animated-svg');
-              animateSvg(svgElement, '#00ff00');
+
+              svgElement.style.fill  =  '#00ff00';
               break;
             
             case 'ClassifEconActiv':
               svgElement.classList.add('animated-svg');
-              animateSvg(svgElement, '#0000FF');
+              animateSvg(svgElement);
+              svgElement.style.fill  =  '#0000FF';
                 break;
             case 'PurposeOfRoom':
               svgElement.classList.add('animated-svg');
-              animateSvg(svgElement, '#FF6600');
+              animateSvg(svgElement);
+              svgElement.style.fill  =  '#FF6600';
                 break;
             case 'TypeOfRoom':
               svgElement.classList.add('animated-svg');
-              animateSvg(svgElement, '#fb00ff');
+              animateSvg(svgElement);
+              svgElement.style.fill  =  '#fb00ff';
               break;
             case 'CODE':
               svgElement.classList.add('animated-svg');
-              animateSvg(svgElement, activeRoomsInfo[i].STR_VALUE);
+              animateSvg(svgElement);
+              svgElement.style.fill  =  activeRoomsInfo[i].STR_VALUE;
               break;
             default:
               svgElement.style.fill = '#000000';
@@ -149,14 +169,13 @@ function showDom(sender) {
 }
 
 }
-function animateSvg(svgElement, color) {
+function animateSvg(svgElement) {
   svgElement.classList.add('animated-svg'); // Добавляем класс для анимации
   
   svgElement.addEventListener('animationend', function() {
     svgElement.classList.remove('animated-svg'); // Удаляем класс после завершения анимации
   }, { once: true }); // Обработчик события будет вызван только один раз
 
-  svgElement.style.fill = color;
 }
 
 //Запись этажей в выпадающий список
@@ -191,12 +210,13 @@ async function changeFloor(sender) {
   lastSvgEltm = null;
   svgColor = null;  
   tab.style.display = 'none';
-  
+  let selectElement = document.getElementById('CODE');
   let str = sender.value;
   let parts = str.split('/');
-  let selectElement = document.getElementById('CODE');
-  activeFloor = parts[0].trim() + ' ' + parts[1].trim();
   
+  
+  activeFloor = parts[0].trim() + ' ' + parts[1].trim();
+
   selectElement.innerHTML = '';
 
   let el = document.createElement("option");
@@ -233,7 +253,7 @@ async function changeFloor(sender) {
     activeRoomsInfo = await fullInfo(activeFloor);
 
     SVGElements = document.querySelectorAll("path, polygon, polyline, rect");
-
+    let id = '';
     SVGElements.forEach(async (svgElement) => {
       svgElement.classList.add('animated-fill');
       svgElement.classList.add("mark");
@@ -242,16 +262,24 @@ async function changeFloor(sender) {
       svgElement.addEventListener('click', function() {
             showBuildings(this);
         });
+        
       for(let i = 0; i < activeRoomsInfo.length; i++) {
         
-        let id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
-
+        if(activeRoomsInfo[i].NUMBOFPLACEMENT === null)
+        {
+           id = `r${activeRoomsInfo[i].NUMBOFROOM}`;
+          
+        }
+        else {
+           id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
+        }
         id = replEngLetWithRus(id);
         
         if(replEngLetWithRus(svgElement.id) == id){
           svgElement.style.fill = activeRoomsInfo[i].STR_VALUE;
           // Удаляем существующий атрибут, если он есть
           svgElement.style.opacity = '1';
+          svgElement.style.fillOpacity = '0.5';
         }
 
        
@@ -369,8 +397,10 @@ function hidePopupOnMap(evt) {
   function replEngLetWithRus(str) {
     const replacements = {
       'A': 'А', 'a': 'а', 'B': 'Б', 'b': 'б', 
-      'V': 'В', 'v': 'в', 'C': 'С', 'c': 'с', 
-      'D': 'Д', 'd': 'д', 'G': 'Г', 'g': 'г', 
+      'V': 'В', 'v': 'в', 'C': 'С', 'c': 'с',
+      'E': 'Е', 'e': 'е', 'Z': 'З', 'z': 'з', 
+      'Ж': 'J', 'ж': 'j', 'D': 'Д', 'd': 'д', 
+      'G': 'Г', 'g': 'г', 
       'M': 'М', 'm': 'м'
     };
   
@@ -494,6 +524,13 @@ async function fullInfo(floor, svgElement) {
   try {
     const response = await fetch(`/api/floors/info/${floor}`);
     const data = await response.json();
+
+    data.forEach(function(element) {
+      if (element.STR_VALUE == null) {
+        element.STR_VALUE = '#FEC04C';
+      }
+    });
+    
     return data; // Возвращаем данные
   } catch (error) {
     console.error('Ошибка при получении данных:', error);

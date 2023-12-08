@@ -144,7 +144,7 @@ section {
       /*opacity: 0.5;*/          /*Прозрачность*/
       fill-opacity: 0.5;
   }
-  
+
   /* Цвета полигонов при наведении мышкой*/
    rect:hover, polygon:hover, #hover, path:hover, ellipse:hover {
       stroke: rgba(2, 131, 229, 0.294);          /*Цвет обводки #005faa*/
@@ -620,6 +620,11 @@ select:disabled {
 
 .element-item:hover {
   transform: scale(1.05); /* Увеличение размера при наведении */
+  cursor: pointer;
+}
+
+.element-item:active{
+  background-color: #cacaca98;
 }
 
 
@@ -649,4 +654,39 @@ select:disabled {
   .element-item {
       flex-basis: 100%; /* На маленьких экранах элементы займут всю ширину */
   }
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #007bff; /* Синий фон */
+  color: white; /* Белый текст */
+  border: none; /* Убрать границу */
+  padding: 10px 15px; /* Внутренние отступы */
+  margin: 5px; /* Внешние отступы */
+  border-radius: 5px; /* Скругленные углы */
+  cursor: pointer; /* Курсор в виде указателя */
+  transition: background-color 0.3s, transform 0.3s; /* Плавный переход для фона и трансформации */
+}
+
+.pagination button:hover {
+  background-color: #0056b3; /* Темно-синий фон при наведении */
+  transform: scale(1.1); /* Немного увеличить кнопку */
+}
+
+.pagination button:active {
+  background-color: #004085; /* Еще более темный синий при нажатии */
+  transform: scale(1); /* Вернуть к исходному размеру */
+}
+
+.pagination button:focus {
+  outline: none; /* Убрать контур при фокусе */
+}
+
+.pagination button.selected {
+  background-color: #007bff37; /* Желтый фон для выбранной страницы */
+  color: black; /* Черный текст для выбранной страницы */
 }

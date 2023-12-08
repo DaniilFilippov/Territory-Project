@@ -15,7 +15,7 @@ async function getAllTerritory(req, res) {
 async function getTerritoryById(req, res) {
     try {
         const { id } = req.params;
-        const result = await dbOperations.executeSQL('SELECT * FROM FD_T_TERRITORY WHERE ID = :id', {id});
+        const result = await dbOperations.executeSQL('SELECT * FROM FD_T_TERRITORY WHERE name = :id', {id});
         res.status(200).json(result);
       } catch (err) {
         res.status(500).json({ error: err.message });

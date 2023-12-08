@@ -29,6 +29,10 @@ app.get('/terrs', function(req, res) {
     res.sendFile(path.join(__dirname,'client','pages','territories.html'));
 }); 
 
+app.get('/land', function(req, res) {
+    res.sendFile(path.join(__dirname,'client','pages','lands.html'));
+}); 
+
 //Map by id
 app.get('/map', function(req, res) {
     res.sendFile(path.join(__dirname,'client','pages','map.html'));

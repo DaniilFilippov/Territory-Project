@@ -6,7 +6,6 @@ let tableNames = {
 };
 const terrDisplay = document.querySelector('#globalMap');
 
-
 let popupOnMap = document.querySelector('.popupOnMap');
 
 fetch('../svgmaps/Россия.svg')
@@ -48,9 +47,6 @@ function fetchData() {
       }
     });
 }
-
-
-      
 
 
 // Display popup window
