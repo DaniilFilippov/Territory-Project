@@ -5,6 +5,45 @@ const domenDictionary = {
   "TypeOfRoom":"TypeOfRoom",
   "CODE":"CODE"
 };
+let dicSquareTotalsCR = {
+  'учебно-вспомогательная': 0, 
+  'подсобная': 0, 
+  'учебная': 0,   
+  'ремонт': 0,
+  'не определено': 0        
+};
+let dicClassifReporting = {
+  'учебно-вспомогательная': 0, 
+  'подсобная': 0, 
+  'учебная': 0,   
+  'ремонт': 0,
+  'не определено': 0        
+};
+
+
+let dicClassifEconActiv = {
+  'не определено': 0, 
+  'общего использования': 0, 
+  'хозяйственного назначения': 0,   
+  'для организации и ведения учебного процесса': 0,
+  'административного подразделения': 0,
+  'административная университета': 0,
+  'администрация ИУЦТ': 0,
+  'административное': 0,
+  'сдана в аренду': 0
+};
+
+let dicSquareTotalsEA = {
+  'не определено': 0, 
+  'общего использования': 0, 
+  'хозяйственного назначения': 0,   
+  'для организации и ведения учебного процесса': 0,
+  'административного подразделения': 0,
+  'административная университета': 0,
+  'администрация ИУЦТ': 0,
+  'административное': 0,
+  'сдана в аренду': 0
+};
 
 
 const queryString = window.location.search;
@@ -156,8 +195,10 @@ function showDom(sender) {
        
       }
     });
-    var textNode = document.createTextNode(`Кол-во комнат типа "${type}": ${amount}`);
+    var textNode = document.createTextNode(`Кол-во комнат типа "${type}": ${amount} `);
+   
     amountOfDom.appendChild(textNode);  
+
   }
 
   for (let key in domenDictionary) {
@@ -521,15 +562,31 @@ async function insInfo(floor, svgElement) {
 }
 //
 async function fullInfo(floor, svgElement) {
+
+
   try {
     const response = await fetch(`/api/floors/info/${floor}`);
     const data = await response.json();
-
+   
     data.forEach(function(element) {
       if (element.STR_VALUE == null) {
         element.STR_VALUE = '#FEC04C';
+       
       }
+      
+      if (dicClassifReporting.hasOwnProperty(element.ClassifReporting)) {
+        dicClassifReporting[element.ClassifReporting]++;
+        dicSquareTotalsCR[element.ClassifReporting] += element.SQUARE;
+      } 
+      
+      if (dicClassifEconActiv.hasOwnProperty(element.ClassifEconActiv)) {
+        dicClassifEconActiv[element.ClassifEconActiv]++;
+        dicSquareTotalsEA[element.ClassifEconActiv] += element.SQUARE;
+      } 
+
+      console.log(dicSquareTotalsEA);
     });
+
     
     return data; // Возвращаем данные
   } catch (error) {

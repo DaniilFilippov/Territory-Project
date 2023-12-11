@@ -211,7 +211,9 @@ async function getInfoRoomsByFloor(req, res) {
       SELECT 
         fr.ID, 
         fr.numbofplacement, 
-        fr.numbofroom, 
+        fr.numbofroom,
+        fr.height,
+        fr.square, 
         ins.code, 
         ins.name, 
         val.str_value,
