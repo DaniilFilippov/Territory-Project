@@ -262,6 +262,63 @@ async function getNamesOfDomen(req, res) {
 } 
 
 
+async function getSumCountFloorsById(req, res) {
+  try {
+      
+      const id = req.params.floorId; 
+      const ins = req.params.ins;
+      let str = id;
+      let parts = str.split(' ');
+      let resID = parts[0].trim() + ' /';
+      for (let i = 1; i < parts.length; i++) {
+        resID = resID + ' ' + parts[i].trim();
+      }
+
+      const result = await dbOperations.executeSQL(
+        `SELECT SUM("Площадь") as "sqrSum", COUNT(*) as "roomsCount"
+        FROM (
+            SELECT
+                r.ID as "Идентификатор",
+                r.numbofdoor as "Номер комнаты(на двери)",
+                r.numbofplacement as "Номер помещения",
+                r.NUMBOFROOM as "Номер комнаты в помещении",
+                r.height as "Высота",
+                r.square as "Площадь",
+                (SELECT name
+                 FROM INS_DEPARTMENT
+                 WHERE rn = (
+                     SELECT INS_DEPARTMENTRN
+                     FROM FD_T_DIVISIONS_ROOM
+                     WHERE prn = r.rn
+                       AND (DATETO is null or DATETO > (SELECT SYSDATE FROM dual))
+                 )
+                ) as "INS"
+            FROM fd_t_list_of_rooms r
+            WHERE prn = (
+                SELECT rn
+                FROM fd_t_list_of_floors
+                WHERE ID = :resID
+            )
+            AND (
+                SELECT code
+                FROM INS_DEPARTMENT
+                WHERE rn = (
+                    SELECT INS_DEPARTMENTRN
+                    FROM FD_T_DIVISIONS_ROOM
+                    WHERE prn = r.rn
+                      AND (DATETO is null or DATETO > (SELECT SYSDATE FROM dual))
+                )
+            ) = :ins
+        )`,
+         {resID, ins});
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+} 
+
+
+
 module.exports = {
     getFloorsOfBuilding,
     getFloorsByID,
@@ -270,5 +327,6 @@ module.exports = {
     getColorOfInsDepart,
     getRoomsOfFloorsEdit,
     getInfoRoomsByFloor,
-    getNamesOfDomen
+    getNamesOfDomen,
+    getSumCountFloorsById
 }

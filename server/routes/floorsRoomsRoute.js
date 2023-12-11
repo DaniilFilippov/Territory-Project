@@ -12,4 +12,5 @@ router.get('/InsDep/:codeInsDep', floorsRoomsController.getColorOfInsDepart);
 router.get('/rooms/:floorId', floorsRoomsController.getRoomsOfFloorsEdit);
 router.get('/floors/info/:floorId', floorsRoomsController.getInfoRoomsByFloor);
 router.get('/floors/info/domen/:code', floorsRoomsController.getNamesOfDomen);
+router.get('/floors/res/:floorId/:ins', floorsRoomsController.getSumCountFloorsById);
 module.exports = router;

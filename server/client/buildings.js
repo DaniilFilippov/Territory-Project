@@ -45,6 +45,27 @@ let dicSquareTotalsEA = {
   'сдана в аренду': 0
 };
 
+let dicPurposeOfRoom = {
+  'нежилая': 0, 
+  'жилая': 0, 
+  'не определено': 0   
+};
+let dicSquareTotalsPR = {
+  'нежилая': 0, 
+  'жилая': 0, 
+  'не определено': 0       
+};
+
+let dicTypeOfRoom = {
+  'вспомогательное': 0, 
+  'основное': 0, 
+  'не определено': 0   
+};
+let dicSquareTotalsTR = {
+  'вспомогательное': 0, 
+  'основное': 0, 
+  'не определено': 0       
+};
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -84,8 +105,6 @@ fetch('/api/buildings/' + buildingId)
     });
 });
 
-console.log(domenDictionary.EnonActiv);
-
 // Заполнение select'ов значениями
 for (let key in domenDictionary) {
   if (domenDictionary.hasOwnProperty(key)) {
@@ -103,9 +122,8 @@ for (let key in domenDictionary) {
   }
 }
 
-
 //Отображение комнат по характеристикам(домен)
-function showDom(sender) {
+async function showDom(sender) { 
   amountOfDom =  document.querySelector(`.${sender.id}txt`);
   amountOfDom.innerHTML = '';
   let amount = 0;
@@ -113,8 +131,6 @@ function showDom(sender) {
   tab.style.display = 'none';
   svgColor = '';
   lastSvgEltm = '';
-
-
   tabContainer.style.border = '1px solid rgba(179, 171, 171, 0)';
   tabContainer.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.0)'; 
   tabContainer.style.background = 'rgba(255, 255, 255, 0.0)'; 
@@ -142,15 +158,12 @@ function showDom(sender) {
     SVGElements.forEach(async (svgElement) => {
       let id = '';
       for(let i = 0; i < activeRoomsInfo.length; i++) {
-        
-
         if (activeRoomsInfo[i].NUMBOFPLACEMENT === null) {
            id = `r${activeRoomsInfo[i].NUMBOFROOM}`;
         }
         else {
            id = `${activeRoomsInfo[i].NUMBOFPLACEMENT}-r${activeRoomsInfo[i].NUMBOFROOM}`;
         }
-
         id = replEngLetWithRus(id);
         if(replEngLetWithRus(svgElement.id) == id && activeRoomsInfo[i][sender.id] == type){
           
@@ -180,12 +193,14 @@ function showDom(sender) {
               svgElement.classList.add('animated-svg');
               animateSvg(svgElement);
               svgElement.style.fill  =  activeRoomsInfo[i].STR_VALUE;
+
+            
               break;
             default:
               svgElement.style.fill = '#000000';
               break;
           }
-          amount +=1;
+       
           break;
         } 
         else {
@@ -195,9 +210,67 @@ function showDom(sender) {
        
       }
     });
-    var textNode = document.createTextNode(`Кол-во комнат типа "${type}": ${amount} `);
-   
-    amountOfDom.appendChild(textNode);  
+
+    let textNode;
+    let sqrNode;
+    let sqr, count;
+    switch (sender.id) {
+      case 'ClassifReporting':
+        console.log(sender.value);
+        textNode = document.createTextNode(`Кол-во комнат типа "${sender.value}": ${dicClassifReporting[sender.value]} `);
+        sqrNode = document.createTextNode(`Площадь на этаже  ${parseFloat(dicSquareTotalsCR[sender.value].toFixed(2))} кв.м.`);
+        break;
+      case 'ClassifEconActiv':
+        console.log(sender.value);
+        textNode = document.createTextNode(`Кол-во комнат типа "${sender.value}": ${dicClassifEconActiv[sender.value]} `);
+        sqrNode = document.createTextNode(`Площадь на этаже  ${parseFloat(dicSquareTotalsEA[sender.value].toFixed(2))} кв.м.`);     
+        break;
+      case 'PurposeOfRoom':
+        console.log(sender.value);
+        textNode = document.createTextNode(`Кол-во комнат типа "${sender.value}": ${dicPurposeOfRoom[sender.value]} `);
+        sqrNode = document.createTextNode(`Площадь на этаже  ${parseFloat(dicSquareTotalsPR[sender.value].toFixed(2))} кв.м.`);
+        console.log(dicPurposeOfRoom);
+        console.log(dicSquareTotalsPR);
+          break;
+      case 'TypeOfRoom':
+        console.log(sender.value);
+        textNode = document.createTextNode(`Кол-во комнат типа "${sender.value}": ${dicTypeOfRoom[sender.value]} `);
+        sqrNode = document.createTextNode(`Площадь на этаже  ${parseFloat(dicSquareTotalsTR[sender.value].toFixed(2))} кв.м.`);
+        console.log(dicTypeOfRoom);
+        console.log(dicSquareTotalsTR);
+        break;
+      case 'CODE':
+        
+        fetch(`/api/floors/res/${activeFloor}/${sender.value}`)
+        .then(response => response.json())
+        .then(data => {
+          data.forEach(element => {
+            
+            sqr = element.sqrSum;
+            count = element.roomsCount;
+            textNode = document.createTextNode(`Кол-во комнат типа "${sender.value}": ${count} `);
+            sqrNode = document.createTextNode(`Площадь на этаже  ${sqr} кв.м.`);
+
+            amountOfDom.appendChild(textNode); 
+            amountOfDom.appendChild(document.createElement('br')); 
+            amountOfDom.appendChild(sqrNode); 
+
+         });
+         
+        })
+        .catch(error => console.error('Ошибка при получении данных:', error));
+        console.log(sqr);
+        break;
+      default:
+        
+        break;
+    }
+    
+    if(sender.id != 'CODE') {
+      amountOfDom.appendChild(textNode); 
+      amountOfDom.appendChild(document.createElement('br')); 
+      amountOfDom.appendChild(sqrNode); 
+    }
 
   }
 
@@ -207,8 +280,7 @@ function showDom(sender) {
       var select = document.getElementById(domenDictionary[key]);
       select.value = 'default';
     }
-}
-
+  }
 }
 function animateSvg(svgElement) {
   svgElement.classList.add('animated-svg'); // Добавляем класс для анимации
@@ -460,7 +532,7 @@ function hidePopupOnMap(evt) {
     }
 
     let fixId = replEngLetWithRus(room);
-    console.log(fixId);
+
 
     fetch(`/api/floors/rooms/${floor}/${fixId}`)
         .then(response => response.json())
@@ -563,7 +635,6 @@ async function insInfo(floor, svgElement) {
 //
 async function fullInfo(floor, svgElement) {
 
-
   try {
     const response = await fetch(`/api/floors/info/${floor}`);
     const data = await response.json();
@@ -584,7 +655,16 @@ async function fullInfo(floor, svgElement) {
         dicSquareTotalsEA[element.ClassifEconActiv] += element.SQUARE;
       } 
 
-      console.log(dicSquareTotalsEA);
+      if (dicPurposeOfRoom.hasOwnProperty(element.PurposeOfRoom)) {
+        dicPurposeOfRoom[element.PurposeOfRoom]++;
+        dicSquareTotalsPR[element.PurposeOfRoom] += element.SQUARE;
+      } 
+
+      if (dicTypeOfRoom.hasOwnProperty(element.TypeOfRoom)) {
+        dicTypeOfRoom[element.TypeOfRoom]++;
+        dicSquareTotalsTR[element.TypeOfRoom] += element.SQUARE;
+      } 
+
     });
 
     
