@@ -632,9 +632,27 @@ async function insInfo(floor, svgElement) {
     return []; // Возвращаем пустой массив в случае ошибки
   }
 }
-//
+//Сброс значений словаря
+function clearDict (dic)
+{
+  Object.keys(dic).forEach(key => {
+    dic[key] = 0;
+  })
+}
+
 async function fullInfo(floor, svgElement) {
 
+
+  clearDict(dicClassifReporting);
+  clearDict(dicSquareTotalsCR);
+  clearDict(dicClassifEconActiv);
+  clearDict(dicSquareTotalsEA);
+  
+  clearDict(dicPurposeOfRoom);
+  clearDict(dicSquareTotalsPR);
+  clearDict(dicTypeOfRoom);
+  clearDict(dicSquareTotalsTR);
+  
   try {
     const response = await fetch(`/api/floors/info/${floor}`);
     const data = await response.json();
