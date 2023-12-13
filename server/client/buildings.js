@@ -130,7 +130,14 @@ async function showDom(sender) {
   let type = sender.value;
   tab.style.display = 'none';
   svgColor = '';
+  
+  if (lastSvgEltm)
+  {
+    lastSvgEltm.classList.remove('highlighted-svg-element');
+  }
+
   lastSvgEltm = '';
+  
   tabContainer.style.border = '1px solid rgba(179, 171, 171, 0)';
   tabContainer.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.0)'; 
   tabContainer.style.background = 'rgba(255, 255, 255, 0.0)'; 
@@ -320,7 +327,12 @@ function fetchFloors(id) {
 
 //Функция смены этажа пользователем
 async function changeFloor(sender) {   
+  if (lastSvgEltm)
+  {
+    lastSvgEltm.classList.remove('highlighted-svg-element');
+  }
   lastSvgEltm = null;
+
   svgColor = null;  
   tab.style.display = 'none';
   let selectElement = document.getElementById('CODE');
@@ -374,6 +386,7 @@ async function changeFloor(sender) {
       svgElement.addEventListener('mouseout', hidePopupOnMap);
       svgElement.addEventListener('click', function() {
             showBuildings(this);
+            
         });
         
       for(let i = 0; i < activeRoomsInfo.length; i++) {
@@ -529,6 +542,7 @@ function hidePopupOnMap(evt) {
     if (lastSvgEltm)
     {
       lastSvgEltm.style.fill = svgColor;
+      lastSvgEltm.classList.remove('highlighted-svg-element');
     }
 
     let fixId = replEngLetWithRus(room);
@@ -586,7 +600,9 @@ function hidePopupOnMap(evt) {
 
         lastSvgEltm = document.getElementById(room);
         svgColor = lastSvgEltm.style.fill; // записыаем цвет элемента. 
-        lastSvgEltm.style.fill = 'red'; // задаем цвет выбранного элемента. 
+        lastSvgEltm.style.fill = 'red';
+        lastSvgEltm.classList.add('highlighted-svg-element');
+        
 } 
 
 function insInfo1(floor, svgElement) {

@@ -4,31 +4,53 @@ const territoryId = urlParams.get('id');
 const svgMapDisplay = document.querySelector('.svgMapTer');
 const nameTitle = document.querySelector('.NameOfTerritory');
 let popupOnMap = document.querySelector('.popupOnMap');
-
+let SVGPATH;
 document.title = "Территория: " + territoryId;
 nameTitle.textContent = "Территория - " + territoryId;
 let popupTimeout;
+let oldColor;
 
 fetch('/api/territories/' + territoryId)
 .then(response => response.json()).then(data => {
     data.forEach(element => {
         const SVGMAP = element.SVGMAP;
-        console.log('eleSVGMAPment.');
         if(SVGMAP != null)
         {
             svgMapDisplay.insertAdjacentHTML('beforeend', SVGMAP);
         }
+       
     });
-    const SVGPATH = document.querySelectorAll("path");
+    SVGPATH = document.querySelectorAll("path");
     for (let i = 0; i < SVGPATH.length; i++) {
         SVGPATH[i].classList.add("mark");
         SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
         SVGPATH[i].addEventListener('mouseout', hidePopupOnMap);
         SVGPATH[i].addEventListener('click', showLandMapEvt);
+        SVGPATH[i].style.opacity ='1';
+        SVGPATH[i].classList.add('animated-map-fill');
       }
 });
 
-console.log(territoryId);
+fetch('/api/territories/lands/' + territoryId.trim())
+.then(response => response.json()).then(data => {
+    const ul = document.createElement('ul');
+    data.forEach(element => {
+        const name = element.ID.trim();
+          
+          const li = document.createElement('li');
+          li.textContent = `${name}`;
+          li.setAttribute('id', name);
+          ul.appendChild(li);     
+
+          li.addEventListener('mouseover', showLandOnMap);
+          li.addEventListener('mouseout', hideLandOnMap);
+          li.addEventListener('click', showLandMapEvt);
+    });
+
+    const container = document.getElementById('mapContainer'); 
+    container.appendChild(ul);
+ 
+});
 
 function fetchData (id) {
    fetch('/api/territories/lands/' + id)
@@ -110,4 +132,25 @@ function showPopupOnMap(evt) {
   function convertRgbToRgba(rgbString, alpha) {
     // Заменяем 'rgb' на 'rgba' и добавляем альфа-канал
     return rgbString.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
+  }
+
+
+  function showLandOnMap(evt) {
+    SVGPATH.forEach(async (svgElement) => {
+      if (svgElement.id.trim() == this.id.trim()) {
+        oldColor = svgElement.style.fill;
+        svgElement.classList.add('highlighted-svg-element');
+      }
+      
+    });
+  }
+
+  function hideLandOnMap(evt) {
+    SVGPATH.forEach(async (svgElement) => {
+      if (svgElement.id.trim() == this.id.trim()) {
+        svgElement.style.fill = oldColor;
+        svgElement.classList.remove('highlighted-svg-element');
+      }
+      
+    });
   }

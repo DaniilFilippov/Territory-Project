@@ -9,6 +9,8 @@ const svgMapDisplay = document.querySelector('.svgMapLand');
 document.title = "Земельный участок: " + landId;
 nameTitle.textContent = "Земельный участок - " + landId;
 let popupTimeout;
+let SVGPATH;
+
 // Add event listener to adjust SVG map size on browser zoom
 window.addEventListener('resize', function() {
   var svgMap = document.getElementById('svgMap1');
@@ -27,25 +29,39 @@ fetch('/api/lands/' + landId)
         {
             svgMapDisplay.insertAdjacentHTML('beforeend', SVGMAP);
         }
-        
     });
-    const SVGPATH = document.querySelectorAll("path");
-    
+    SVGPATH = document.querySelectorAll("path"); 
     for (let i = 0; i < SVGPATH.length; i++) {
         SVGPATH[i].classList.add("mark");
         SVGPATH[i].addEventListener('mouseover', showPopupOnMap);
         SVGPATH[i].addEventListener('mouseout', hidePopupOnMap);
         SVGPATH[i].addEventListener('click', showLandMapEvt);
+        SVGPATH[i].style.opacity ='1';
+        SVGPATH[i].classList.add('animated-map-fill');
       }
 });
 
-
+fetch('/api/lands/buildings/' + landId)
+.then(response => response.json()).then(data => {
+    const ul = document.createElement('ul');
+    data.forEach(element => {
+        const name = element.NOTE; 
+          const li = document.createElement('li');
+          li.textContent = `${name}`;
+          li.setAttribute('id',  element.ID);
+          ul.appendChild(li);     
+          li.addEventListener('mouseover', showBuildOnMap);
+          li.addEventListener('mouseout', hideBuildOnMap);
+          li.addEventListener('click', showLandMapEvt);
+    });
+    const container = document.getElementById('mapContainer'); 
+    container.appendChild(ul);
+});
 
 function fetchData (id) {
   fetch('/api/territories/lands/' + id)
  .then(response => response.json())
  .then(data => {
-
    for (let i = 0; i < data.length; i++) {
        //let link = document.createElement('a');
        //link.href = `/territories?id=${data[i].ID}`; // Set the href based on the data from the database
@@ -54,7 +70,6 @@ function fetchData (id) {
        text.textContent = `- ${data[i].CODE}`;
        let elem = document.createElement('div');
        elem.appendChild(text);
-       
        // Append element to popupOnMap div before the first child
        popupOnMap.appendChild(elem);
      }
@@ -65,26 +80,18 @@ function fetchData (id) {
 function showPopupOnMap(evt) {
   clearTimeout(popupTimeout); // Очищаем предыдущий таймер, если он был установлен
   popupTimeout = setTimeout(() => {
-    
     popupOnMap.innerHTML = '';
     let head = document.createElement('h3');
-    
     fetch('/api/buildings/' + this.id)
     .then(response => response.json()).then(data => {
         data.forEach(element => {
-
-            head.textContent = element.NOTE;
-            
-        });
-        
+            head.textContent = element.NOTE;     
+        });        
     });
     popupOnMap.id = this.id;
     popupOnMap.appendChild(head);
-      
     fetchData(this.id);
-  
     // Show popup
-  
       // Calculate popup position
       const x = evt.clientX;
       const y = evt.clientY;
@@ -104,15 +111,12 @@ function showPopupOnMap(evt) {
   });
 
   function showBuildings(sender) {
-  
     window.location.href = `/buildings?id=${sender.id}`
   }
   
   function showLandMapEvt(evt) {
-    
     window.location.href = `/buildings?id=${evt.target.id}`
   }
-
 
   function hidePopupOnMap(evt) {
     clearTimeout(popupTimeout); // Очищаем таймер, чтобы предотвратить появление popup
@@ -127,3 +131,18 @@ function showPopupOnMap(evt) {
     // Заменяем 'rgb' на 'rgba' и добавляем альфа-канал
     return rgbString.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
   }
+  function showBuildOnMap(evt) {
+    SVGPATH.forEach(svgElement => {
+        if (svgElement.id.trim() === this.id.trim()) {
+            svgElement.classList.add('highlighted-svg-element');
+        }  
+    });
+}
+
+function hideBuildOnMap(evt) {
+    SVGPATH.forEach(svgElement => {
+        if (svgElement.id.trim() === this.id.trim()) {
+            svgElement.classList.remove('highlighted-svg-element');
+        }
+    });
+}

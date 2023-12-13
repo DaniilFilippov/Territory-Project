@@ -4,6 +4,7 @@ let tableNames = {
   name: 'Name',
   note: 'Note',
 };
+let icons;
 const terrDisplay = document.querySelector('#globalMap');
 
 let popupOnMap = document.querySelector('.popupOnMap');
@@ -14,7 +15,7 @@ fetch('../svgmaps/Россия.svg')
         // Append the SVG data to the SVG element
         const svgContainer = document.getElementById('globalMap');
         svgContainer.innerHTML = svgData;
-        let icons = document.getElementsByClassName('icon');
+        icons = document.getElementsByClassName('icon');
         
         console.log(icons.length);
         // Attach event listeners to svg map elements
@@ -22,6 +23,10 @@ fetch('../svgmaps/Россия.svg')
           icons[i].addEventListener('mouseover', showPopupOnMap);
           icons[i].addEventListener('mouseout', hidePopupOnMap);
           icons[i].addEventListener('click', showMapEvt);
+          icons[i].style.opacity = '1';
+          icons[i].style.fillOpacity = '0.4';
+          icons[i].style.fill ='#0000ff';
+          icons[i].classList.add('animated-map-fill');
         }
       })
       .catch(err => {
@@ -51,6 +56,7 @@ function fetchData() {
 
 // Display popup window
 function showPopupOnMap(evt) {
+  
   let flag = true;
   popupOnMap.innerHTML = '';
   let head = document.createElement('h3');
@@ -80,6 +86,7 @@ document.addEventListener('click', function(event) {
   });
 
 function hidePopupOnMap(evt) {
+
   if (!popupOnMap.contains(evt.target)) {
     // Hide the popup
     popupOnMap.style.visibility = 'hidden';
