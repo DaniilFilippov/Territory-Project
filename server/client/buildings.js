@@ -370,9 +370,20 @@ async function changeFloor(sender) {
 
     svgMapDisplay.innerHTML = '';
     data.forEach(element => {
-        svgMapDisplay.insertAdjacentHTML('beforeend', element.SVGMAP);
+      
+
+        if (element.SVGMAP == null) {
+          let imagePath = 'src/no-svg.jpg'
+          svgMapDisplay.insertAdjacentHTML('beforeend', `<img src="${imagePath}" alt="No SVG available">`);
+        }
+        else {
+          svgMapDisplay.insertAdjacentHTML('beforeend', element.SVGMAP);
+        }
 
     });
+
+
+   
 
 
     activeRoomsInfo = await fullInfo(activeFloor);

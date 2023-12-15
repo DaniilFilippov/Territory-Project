@@ -848,7 +848,14 @@ select:disabled {
     stroke-width: 10px; /* Промежуточная ширина обводки */
   }
 }
-.map-container img {
+
+.svgContainer {
+  display: flex;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center; /* Центрирование по вертикали */
+}
+
+.map-container img, .svgContainer img {
   max-width: 100%; /* Максимальная ширина изображения равна ширине контейнера */
   max-height: 100%; /* Максимальная высота изображения равна высоте контейнера */
   height: auto; /* Высота изображения будет пропорциональной ширине */
