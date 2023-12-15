@@ -177,7 +177,7 @@ async function showDom(sender) {
           switch (sender.id) {
             case 'ClassifReporting':
               svgElement.classList.add('animated-svg');
-
+              animateSvg(svgElement);
               svgElement.style.fill  =  '#00ff00';
               break;
             
@@ -327,7 +327,7 @@ function fetchFloors(id) {
 
 //Функция смены этажа пользователем
 async function changeFloor(sender) {   
-  if (lastSvgEltm)
+    if (lastSvgEltm)
   {
     lastSvgEltm.classList.remove('highlighted-svg-element');
   }
@@ -460,7 +460,7 @@ function fetchData(activeFloor, id) {
         let content = document.createElement('p');
         let room = item.namesOfRoom;
         let roomid = item.Идентификатор;
-        head.textContent = `Номер комнты: ${roomid} (${fixId})`;
+        head.textContent = `Номер комнаты: ${roomid} (${fixId})`;
         content.textContent =`${room}`;
         content.style.textAlign = 'center';
         content.style.margin = '0px';

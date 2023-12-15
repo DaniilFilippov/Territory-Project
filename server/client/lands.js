@@ -35,8 +35,16 @@ function createAndAddElement(name, svgmap) {
 
     const mapContainer = document.createElement('div');
     mapContainer.className = 'map-container';
-    mapContainer.insertAdjacentHTML('beforeend', svgmap);
 
+    if (svgmap == null) {
+        let imagePath = 'src/no-svg.jpg'
+        mapContainer.insertAdjacentHTML('beforeend', `<img src="${imagePath}" alt="No SVG available">`);
+    }
+    else {
+        mapContainer.insertAdjacentHTML('beforeend', svgmap);
+    }
+
+    
     // Собираем структуру элементов
     elementItem.appendChild(header);
     elementItem.appendChild(mapContainer);
@@ -68,6 +76,7 @@ function createPagination() {
             showPage(i);
             document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('selected'));
             this.classList.add('selected');
+            window.scrollTo(0, 0);
         });
         paginationContainer.appendChild(btn);
     }

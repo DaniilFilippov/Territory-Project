@@ -733,6 +733,8 @@ select:disabled {
 .animated-map-fill, .animated-map-fill-map{
   
   transition: fill 0.2s ease; 
+  position:fixed;
+  z-index: 10;
 
 }
 .animated-map-fill:hover, .animated-map-fill-map:hover  {
@@ -750,11 +752,14 @@ select:disabled {
   /* Анимация обводки */
   stroke-dasharray: 8, 8; /* Пунктирная обводка */
   animation: dash 10s linear infinite, strokeAnimation 5s linear infinite;
+ 
 }
 
 .animated-map-fill-map:hover {
   stroke-width: 10px; /* Начальная ширина обводки */
+  stroke-dasharray: 12, 12; /* Пунктирная обводка */
   animation: dash 10s linear infinite, strokeAnimationMap 5s linear infinite;
+  z-index: 1000;
 }
 
 /* Стили для выделения SVG элемента */
@@ -776,7 +781,7 @@ select:disabled {
   animation: dash 10s linear infinite, strokeAnimation 5s linear infinite;
 }
 
-.highlighted-svg-elementMap {
+.highlighted-svg-elementMap, .highlighted-svg-elementRoom {
   cursor: pointer;
   
   /* Изменение цвета заливки и обводки */
@@ -792,6 +797,9 @@ select:disabled {
   /* Анимация обводки */
   stroke-dasharray: 12, 12; /* Пунктирная обводка */
   animation: dash 10s linear infinite, strokeAnimationMap 5s linear infinite;
+}
+.highlighted-svg-elementRoom {
+  stroke-dasharray: 12, 12; /* Пунктирная обводка */
 }
 
 /* Ключевые кадры для анимации обводки */
@@ -839,4 +847,10 @@ select:disabled {
     stroke: #4e0000; /* Промежуточный цвет обводки */
     stroke-width: 10px; /* Промежуточная ширина обводки */
   }
+}
+.map-container img {
+  max-width: 100%; /* Максимальная ширина изображения равна ширине контейнера */
+  max-height: 100%; /* Максимальная высота изображения равна высоте контейнера */
+  height: auto; /* Высота изображения будет пропорциональной ширине */
+  object-fit: contain; /* Изображение будет масштабироваться, сохраняя пропорции, без обрезания */
 }

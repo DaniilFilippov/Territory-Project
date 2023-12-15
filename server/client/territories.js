@@ -10,7 +10,6 @@ fetch('/api/territories')
     data.forEach(element => {
         const name = element.NAME;
         const SVGMAP = element.SVGMAP;
-
         createAndAddElement(name, SVGMAP);
     });
     createPagination();
@@ -35,7 +34,14 @@ function createAndAddElement(name, svgmap) {
 
     const mapContainer = document.createElement('div');
     mapContainer.className = 'map-container';
-    mapContainer.insertAdjacentHTML('beforeend', svgmap);
+    if (svgmap == null) {
+        let imagePath = 'src/no-svg.jpg'
+        mapContainer.insertAdjacentHTML('beforeend', `<img src="${imagePath}" alt="No SVG available">`);
+    }
+    else {
+        mapContainer.insertAdjacentHTML('beforeend', svgmap);
+    }
+   
 
     // Собираем структуру элементов
     elementItem.appendChild(header);
@@ -68,6 +74,7 @@ function createPagination() {
             showPage(i);
             document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('selected'));
             this.classList.add('selected');
+            window.scrollTo(0, 0);
         });
         paginationContainer.appendChild(btn);
     }

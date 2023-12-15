@@ -46,10 +46,19 @@ function createAndAddElement(name, svgmap) {
 }
 
 fetch('../svgmaps/' + mapId + '.svg')
-      .then(response => response.text())
+      .then((response => {
+        if (!response.ok) {
+          // Если HTTP-статус в ответе 404, 500 и т.д.
+          throw new Error('Network response was not ok, status: ' + response.status);
+        }
+        return response.text();
+      }))
       .then(svgData => {
+       
         // Append the SVG data to the SVG element
         const svgContainer = document.getElementById('svgMapCity');
+        
+
         svgContainer.innerHTML = svgData;
         let marks = document.getElementsByClassName('mark');
 
@@ -58,17 +67,17 @@ fetch('../svgmaps/' + mapId + '.svg')
         SVGElements = document.querySelectorAll("path, polygon, polyline, rect");
 
         SVGElements.forEach(async (svgElement) => {
-          svgElement.classList.add('animated-map-fill-map');
+          
           svgElement.classList.add("mark");
           svgElement.addEventListener('mouseover', showPopupOnMap);
           svgElement.addEventListener('mouseout', hidePopupOnMap);
           svgElement.addEventListener('click', showLandMapEvt);
           svgElement.style.opacity = '1';
+          svgElement.classList.add('animated-map-fill-map');
           svgElement.style.fill = '#0000ff';
         });
 
-    })
-      .catch(err => {
+    }).catch(err => {
         console.error('Error fetching SVG file:', err);
 
     });
@@ -126,6 +135,7 @@ function showPopupOnMap(evt) {
     popupOnMap.id = this.id;
     popupOnMap.appendChild(head);
       
+    
     //fetchData(this.id);
     
     console.log(this.id);
@@ -165,6 +175,11 @@ function showPopupOnMap(evt) {
       if (svgElement.id == this.id) {
         svgElement.style.fill = '#ff0000';
         svgElement.classList.add('highlighted-svg-elementMap');
+
+        // Находим родительский элемент SVG
+        let svgParent = svgElement.parentNode;
+        // Перемещаем targetPath в конец родительского элемента SVG
+        svgParent.appendChild(svgElement);
       } 
     });
   }
