@@ -87,7 +87,8 @@ let lastDom = '';
 let amountOfEcAcElem= '';
 let currentRequest = null;
 let popupTimeout;
-
+let textNode;
+let sqrNode;
 fetchFloors(buildingId);
 
 fetch('/api/buildings/' + buildingId)
@@ -124,8 +125,9 @@ for (let key in domenDictionary) {
 
 //Отображение комнат по характеристикам(домен)
 async function showDom(sender) { 
-  amountOfDom =  document.querySelector(`.${sender.id}txt`);
   amountOfDom.innerHTML = '';
+  amountOfDom =  document.querySelector(`.${sender.id}txt`);
+  
   let amount = 0;
   let type = sender.value;
   tab.style.display = 'none';
@@ -218,8 +220,9 @@ async function showDom(sender) {
       }
     });
 
-    let textNode;
-    let sqrNode;
+    textNode = '';
+    sqrNode = '';
+    
     let sqr, count;
     switch (sender.id) {
       case 'ClassifReporting':
@@ -332,7 +335,7 @@ async function changeFloor(sender) {
     lastSvgEltm.classList.remove('highlighted-svg-element');
   }
   lastSvgEltm = null;
-
+  amountOfDom.innerHTML = '';
   svgColor = null;  
   tab.style.display = 'none';
   let selectElement = document.getElementById('CODE');
